@@ -72,7 +72,7 @@ const handleSignin = async() => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class= "loginbody">
     <div class="login_login-box">
         <div class="login_login-header">
         <div className='login_logo'>

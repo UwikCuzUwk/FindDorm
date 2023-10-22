@@ -49,8 +49,9 @@ export default function LandlordNavbar() {
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a class="" href="/">Home</a></li>
+        <li><a class="" href="/landlord_home">Home</a></li>
         <li><a href="/landlord_add">Add </a></li>
+        <li><a href="/landlord_booked">Booked </a></li>
         <li><a  class = "backtohome" onClick = {handleLogout}>Logout</a></li>
       </ul>
     </nav>

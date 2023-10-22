@@ -4,6 +4,7 @@
 /* POPPINS FONT */
    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
 
+
 .login_login-box{
     position: relative;
     width: 470px;
@@ -21,7 +22,7 @@
 .create_login-box{
     position: relative;
     width: 470px;
-    height: 600px;
+    height: 700px;
     padding:1px 30px;
     background: #FFF;
     border: 1px solid #ddd;
@@ -302,6 +303,8 @@ button{
     text-decoration: none;
 }
 @media only screen and (min-width:320px) and (max-width: 480px){
+      
+    
     .login_login-box{
         position: relative;
         width: 360px;
@@ -341,22 +344,35 @@ button{
         margin-left:150px;
         text-decoration: none;
         font-family: 'Poppins', sans-serif;
-        margin-top:15px;
+        margin-top:20px;
     }
     .create_login-box{
         position: relative;
         width: 360px;
-        height: 570px;
+        height: 590px;
         padding:1px 30px;
-        background: #FFF;
         border: 1px solid #ddd;
         border-radius: 10px;
         overflow: hidden;
     }
+    
   
     .login_forgot .login_forgot-link{
    margin-left:-100px;
     }
+    .login_forgot .backtologin{
+       margin-top:-10px;
+    }
+    .login_sign-up{
+      margin-bottom:-40px;  
+  }
+  .login_input-google{
+  align-items: center;
+  border-radius: 20px;
+}
+.login_input-twitter{
+    border-radius: 15px;
+}
    
 }
 @media only screen and (min-width:481px) and (max-width: 768px){
@@ -409,11 +425,9 @@ button{
         width: 260px;
         height: 610px;
         padding:1px 30px;
-        background: #FFF;
         border: 1px solid #ddd;
         border-radius: 10px;
         margin-bottom:150px;
-    
     }
     .login_logo{
         width: 40px;
@@ -437,14 +451,16 @@ button{
         border: 1px solid #ddd;
         border-radius: 10px;
     }
-     .login_forgot .backtologin{
+     .login_forgot .backtologin     {
         font-size: 17px;
         color: #333;
         margin-left:10px;
         text-decoration: none;
         font-family: 'Poppins', sans-serif;
-        margin-top:15px;
+        margin-bottom:100px;
+      
     }
+  
     .login_input-google{
         width: 100%;
         height: 50px;

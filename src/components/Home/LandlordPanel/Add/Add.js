@@ -34,20 +34,12 @@ function Add() {
     const [id,setId] =useState('');
     const [currentUser, setCurrentUser] = useState(null);
     const [userItems, setUserItems] = useState([]);
+    const [message,setMessage] = useState('');
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [image, setImage] = useState('');
-    const [image1, setImage1] = useState('');
-    const [image2, setImage2] = useState('');
-    const [image3, setImage3] = useState('');
-    const [image4, setImage4] = useState('');
-    const [imglist, setImglist] = useState([]);
-    const [imageUrl, setImageUrls] = useState('')
-    const [imageUrl1, setImageUrls1] = useState('')
-    const [imageUrl2, setImageUrls2] = useState('')
-    const [imageUrl3, setImageUrls3] = useState('')
-    const [imageUrl4, setImageUrls4] = useState('')
+    const [selectedImages, setSelectedImages] = useState([]);
+    const [imageUrls, setImageUrls] = useState([]);
      
 
    useEffect(() => {
@@ -76,187 +68,82 @@ function Add() {
         try {
           const db = firebase.firestore();
           const itemsCollection = db.collection('landlordData');
-    
-          // Query items collection where the 'uid' field is equal to the current user's UID
           const querySnapshot = await itemsCollection.where('LandLord', '==', uid).get();
-    
-          // Extract data from the query snapshot
-          const itemsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          
+          const userList = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            userList.push(data);
+          });
+  
           // Update the state with the user's items
-          setUserItems(itemsData);
+          setUserItems(userList);
         } catch (error) {
           console.error('Error fetching user items:', error);
         }
       };
       
-      
-      fetchUser();
-    
       return () => unsubscribe();
-
-      }, []);
-
-
-      useEffect(() => {
-        const fetchImageUrls = async () => {
-          const querySnapshot = await getDocs(collection(firestore, 'landlordData'));
-          const urls = querySnapshot.docs.map((doc) => doc.data().BedRoom);
-          setImageUrls(urls);
-        };
-        const fetchImageUrls1 = async () => {
-          const querySnapshot1 = await getDocs(collection(firestore, 'landlordData'));
-          const urls1 = querySnapshot1.docs.map((doc) => doc.data().LivingRoom);
-          setImageUrls1(urls1);
-        };
-        const fetchImageUrls2 = async () => {
-          const querySnapshot2 = await getDocs(collection(firestore, 'landlordData'));
-          const urls2 = querySnapshot2.docs.map((doc) => doc.data().DiningArea);
-          setImageUrls1(urls2);
-        };
-        const fetchImageUrls3 = async () => {
-          const querySnapshot3 = await getDocs(collection(firestore, 'landlordData'));
-          const urls3 = querySnapshot3.docs.map((doc) => doc.data().Kitchen);
-          setImageUrls3(urls3);
-        };
-        const fetchImageUrls4 = async () => {
-          const querySnapshot4 = await getDocs(collection(firestore, 'landlordData'));
-          const urls4 = querySnapshot4.docs.map((doc) => doc.data().Other);
-          setImageUrls4(urls4);
-        };
-
+      fetchUser();
+      fetchUserItems();
     
-        fetchImageUrls();
-        fetchImageUrls1();
-        fetchImageUrls2();
-         fetchImageUrls3();
-         fetchImageUrls4();
+
+
       }, []);
-   
-
-      const handleUpload = (e) =>{
-        if (e.target.files[0]) {
-          setImage(e.target.files[0]);
-        }
-    }
-     const handleUpload1= (e) =>{
-      if (e.target.files[0]) {
-        setImage1(e.target.files[0]);
-      }
-   }
-   const handleUpload2 = (e) =>{
-    if (e.target.files[0]) {
-      setImage2(e.target.files[0]);
-    }
-    }
-    const handleUpload3 = (e) =>{
-    if (e.target.files[0]) {
-    setImage3(e.target.files[0]);
-  }
-  }
-  const handleUpload4 = (e) =>{
-  if (e.target.files[0]) {
-    setImage4(e.target.files[0]);
-  }
-  }
 
 
+
+
+
+      const handleImageChange = (event) => {
+        const newImages = event.target.files;
+        setSelectedImages([...selectedImages, ...newImages]);
+      };
 
 const handleSearch =()=>{
 
 }
-const handleAddRecord =async(e)=>{  
+const handleAddRecord = async (e) => {
   e.preventDefault();
-    if (image == null) {
-      toast.error("Please select an image");
-      return;
-    }
-    if (image == null) {
-      toast.error("Please select an image");
-      return;
-    }
-    try {
+  const urls = [];
+  const user = firebase.auth().currentUser;
+  for (const image of selectedImages) {
     const storageRef = ref(storage, `landlordimage/${image.name}`);
     const uploadTask = uploadBytesResumable(storageRef, image);
-    const snapshot = await getDownloadURL(uploadTask.snapshot.ref);
+    await uploadTask;
 
-    const storageRef1 = ref(storage, `landlordimage/${image1.name}`);
-    const uploadTask1 = uploadBytesResumable(storageRef1, image1);
-    const snapshot1 = await getDownloadURL(uploadTask1.snapshot.ref);
-  
-    const storageRef2 = ref(storage, `landlordimage/${image2.name}`);
-    const uploadTask2 = uploadBytesResumable(storageRef2, image2);
-    const snapshot2= await getDownloadURL(uploadTask2.snapshot.ref);
-
-    const storageRef3 = ref(storage, `landlordimage/${image3.name}`);
-    const uploadTask3 = uploadBytesResumable(storageRef3, image3);
-    const snapshot3 = await getDownloadURL(uploadTask3.snapshot.ref);
-
-    const storageRef4 = ref(storage, `landlordimage/${image4.name}`);
-    const uploadTask4 = uploadBytesResumable(storageRef4, image4);
-    const snapshot4 = await getDownloadURL(uploadTask4.snapshot.ref);
-   
-    const valRef = collection(firestore,'landlordData')
-    addDoc(valRef,{LandLord:currentUser.uid, Name:name, Price:price, Location:location, CLass:cclass, BedRoom:snapshot, LivingRoom:snapshot1, DiningArea:snapshot2, Kitchen:snapshot3, Other:snapshot4})
-   toast.success('Successfully Added !', 
-   {position: toast.POSITION.TOP_CENTER})
-   setTimeout(() =>2000);
-   
-    console.log('Image uploaded successfully with ID: ', currentUser.uid);
-  } catch (error) {
-    console.error('Error uploading image: ', error.message);
+    const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+    urls.push(imageUrl);
   }
-  }
+
+  setImageUrls(urls);
+  alert('Images uploaded successfully');
+
+  const valRef = collection(firestore,'landlordData')
+  addDoc(valRef,{LandLord:currentUser.uid, 
+    Name:name, 
+    uid:user.uid,
+    Price:price, 
+    Location:location, 
+    CLass:cclass, 
+    Message:message,
+  Link:urls,
+     Rate1:0, 
+     Rate2:0, 
+     Rate3:0, 
+     Rate4:0,
+      Rate5:0 })
+ toast.success('Successfully Added !', 
+ {position: toast.POSITION.TOP_CENTER})
+ setTimeout(() =>2000);
+ handleShow(false)
+};
     
 
 const handleEdit =()=>{
     
 }
-const handleDelete =async(uid, BedRoom, LivingRoom, DiningArea, Kitchen, Other)=>{
-  const imageRef = ref(storage, imageUrl);
-  await deleteObject(imageRef);
-  const querySnapshot = await getDocs(collection(firestore, 'landlordData'));
-  querySnapshot.forEach((doc) => {
-    if (doc.data().imageUrl === BedRoom) {
-      deleteDoc(doc.ref);
-    }
-  });
-  const imageRef1 = ref(storage, imageUrl1);
-  await deleteObject(imageRef1);
-  const querySnapshot1 = await getDocs(collection(firestore, 'landlordData'));
-  querySnapshot1.forEach((doc) => {
-    if (doc.data().imageUrl1 === LivingRoom) {
-      deleteDoc(doc.ref);
-    }
-  });
-  const imageRef2 = ref(storage, imageUrl2);
-  await deleteObject(imageRef2);
-  const querySnapshot2 = await getDocs(collection(firestore, 'landlordData'));
-  querySnapshot2.forEach((doc) => {
-    if (doc.data().imageUrl2 === DiningArea) {
-      deleteDoc(doc.ref);
-    }
-  });
-  const imageRef3 = ref(storage, imageUrl3);
-  await deleteObject(imageRef3);
-  const querySnapshot3 = await getDocs(collection(firestore, 'landlordData'));
-  querySnapshot3.forEach((doc) => {
-    if (doc.data().imageUrl3 === Kitchen) {
-      deleteDoc(doc.ref);
-    }
-  });
-  const imageRef4 = ref(storage, imageUrl4);
-  await deleteObject(imageRef4);
-  const querySnapshot4 = await getDocs(collection(firestore, 'landlordData'));
-  querySnapshot4.forEach((doc) => {
-    if (doc.data().imageUrl4 === Other) {
-      deleteDoc(doc.ref);
-    }
-  });
-  const deleteVal =  doc(firestore,"landlordData",uid)
-  await deleteDoc(deleteVal)
-  toast.success('Deleted!', 
-  {position: toast.POSITION.TOP_CENTER})
+const handleDelete =async()=>{
+
     
 }
 
@@ -303,11 +190,7 @@ Add new Room
                 <th>Class</th>
                 <th>Price</th>
                 <th>Location </th>
-                <th>BedRoom </th>
-                <th>Living Room </th>
-                <th>Dining Area </th>
-                <th>Kitchen Area </th>
-                <th>Other</th>
+                <th>Image </th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -322,11 +205,14 @@ Add new Room
                    <td>{users.CLass}</td>
                    <td>{users.Price}</td>
                    <td>{users.Location}</td>
-                  <td><img src={users.BedRoom} alt="User" style={{ width: '80px', height: '80px' }} /></td>
-                  <td><img src={users.LivingRoom} alt="User" style={{ width: '80px', height: '80px' }} /></td>
-                  <td><img src={users.DiningArea} alt="User" style={{ width: '80px', height: '80px' }} /></td>
-                  <td><img src={users.Kitchen} alt="User" style={{ width: '80px', height: '80px' }} /></td>
-                  <td><img src={users.Other} alt="User" style={{ width: '80px', height: '80px' }} /></td>
+                    
+                     <div>
+            {users.Link.map((imageLink, imageIndex) => (
+              <img key={imageIndex} src={imageLink} alt={`Image ${imageIndex}`} style={{ width: '80px', height: '80px' }} />
+            ))}
+          </div>
+                    
+                      
 
                    <td>
                   
@@ -341,7 +227,7 @@ Add new Room
                 })}
                  <td colSpan={7}>No Account </td>
         
-                 
+             
         </tbody>
     </table>
 </div>   
@@ -370,26 +256,16 @@ keyboard={false}
     <div class="form-group mt-3">
         <input type="text" class="form-control" id="contact" aria-describedby="emailHelp" placeholder="Price" value = {price} onChange={(e) => setPrice(e.target.value)} />
     </div>
+    
+    <div class="col-12">
+                <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="message" name="message" rows="3" required value = {message} onChange={(e)=> setMessage(e.target.value)}></textarea>
+              </div>
     <div class="mb-3">
   <label for="formFile" class="form-label" style ={{left:"10px"}}>Bedroom</label>
-  <input class="form-control"  multiple accept="image/*"  type="file" id="formFile"  onChange={(e)=>handleUpload(e)}/>
+  <input class="form-control"  multiple accept="image/*"  type="file" id="formFile" onChange={handleImageChange}/>
 </div>
-<div class="mb-3">
-  <label for="formFile" class="form-label" style ={{left:"10px"}}>Living Room</label>
-  <input class="form-control"  multiple accept="image/*"  type="file" id="formFile"  onChange={(e)=>handleUpload1(e)}/>
-</div>
-<div class="mb-3">
-  <label for="formFile" class="form-label" style ={{left:"10px"}}>Dining Area</label>
-  <input class="form-control"  multiple accept="image/*"  type="file" id="formFile"  onChange={(e)=>handleUpload2(e)}/>
-</div>
-<div class="mb-3">
-  <label for="formFile" class="form-label" style ={{left:"10px"}}>Kitchen</label>
-  <input class="form-control"  multiple accept="image/*"  type="file" id="formFile"  onChange={(e)=>handleUpload3(e)}/>
-</div>
-<div class="mb-3">
-  <label for="formFile" class="form-label" style ={{left:"10px"}}>Other</label>
-  <input class="form-control"  multiple accept="image/*"  type="file" id="formFile"  onChange={(e)=>handleUpload4(e)}/>
-</div>
+
       <button type="submit" class="btn btn-success mt-4" onClick={handleAddRecord}>Add Record</button>
     </form>
 </Modal.Body>

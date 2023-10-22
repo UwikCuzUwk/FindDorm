@@ -7,8 +7,7 @@ import Swal from 'sweetalert2';
 export default function UserNavbar() {
   const navigate = useNavigate();
   const handleLogout = async () => {
-    try {
-     
+ 
         Swal.fire({
             title: 'Are you sure?',
             text: "You back at Home page!",
@@ -27,10 +26,7 @@ export default function UserNavbar() {
               )
             }
           })
-    } catch (error) {
-      console.error('Error signing out:', error.message);
-    }
-  };
+    } 
 
 
   return (
@@ -49,9 +45,9 @@ export default function UserNavbar() {
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a class="" href="">Home</a></li>
+        <li><a class="" href="/user_home">Home</a></li>
         <li><a href="">About Us</a></li>
-        <li><a href="">Booked</a></li>
+        <li><a href="/user_booked">Booked</a></li>
         <li><a  class = "backtohome" onClick = {handleLogout}>Logout</a></li>
       </ul>
     </nav>

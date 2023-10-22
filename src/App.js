@@ -2,7 +2,6 @@ import React from 'react'
 import {Route, Routes} from 'react-router-dom'
 import ProtectedRoutes from './components/AuthContext/ProtectedRoutes'
 import { AuthContextProvider } from './components/AuthContext/AuthContext'
-import Navbar from './components/Navbar/Navbar'
 import Login from './components/LoginPanel/Login/Login'
 import Caccount from './components/LoginPanel/Caccount'
 import Forgot from './components/LoginPanel/Forgot/Forgot'
@@ -12,6 +11,17 @@ import LandlordHome from './components/Home/LandlordPanel/Home/LandlordHome'
 import Add from './components/Home/LandlordPanel/Add/Add'
 import AdminHome from './components/Home/AdminPanel/Home/AdminHome'
 import AdminAdduser from './components/Home/AdminPanel/AdminAddUser/AdminAdduser'
+import UserView from './components/Home/UserPanel/UserView/UserView'
+import Location from './components/Home/UserPanel/Location/Location'
+import UserBook from './components/Home/UserPanel/Booking/UserBook'
+import Booked from './components/Home/UserPanel/Booked/Booked'
+import LandLordView from './components/Home/LandlordPanel/View/LandLordView'
+import LandLordBooked from './components/Home/LandlordPanel/LandLordBooking/LandLordBooked'
+import Home from './components/LoginPanel/Home/Home'
+import Payment from './components/Home/LandlordPanel/Payment/Payment'
+import UserPayment from './components/Home/UserPanel/Pending/UserPayment'
+import UserDownload from './components/Home/UserPanel/UserDownload/UserDownload'
+
 
 
 function App() {
@@ -19,7 +29,7 @@ function App() {
   <>
   <AuthContextProvider>  
   <Routes>
-    <Route exact path = "/" element = {<Navbar />} />
+    <Route exact path = "/" element ={<Home />} />
     <Route exact path = "/login_page" element = {<Login />} />
       <Route exact path = "/signup_page" element = {<Caccount />} />
       <Route exact path = "/reset_password" element = {<Forgot /> } />
@@ -29,6 +39,15 @@ function App() {
       <Route exact path = "/landlord_add" element ={<ProtectedRoutes><Add /></ProtectedRoutes>} />
       <Route exact path = "/admin_home" element ={<AdminHome />} />
       <Route exact path = "/admin_add" element ={<AdminAdduser />} />
+      <Route exact path = "/user_view/:id" element ={<ProtectedRoutes><UserView /></ProtectedRoutes>} />
+      <Route exact path = "/user_location" element = {<ProtectedRoutes><Location /></ProtectedRoutes>} />
+      <Route exact path = "/user_booking/:id" element = {<ProtectedRoutes><UserBook /></ProtectedRoutes>} />
+      <Route exact path = "/user_booked" element ={<ProtectedRoutes><Booked /></ProtectedRoutes>} />
+      <Route exact path = "/landlord_view/:id" element ={<ProtectedRoutes><LandLordView /></ProtectedRoutes>} />
+      <Route exact path = "/landlord_booked" element ={<ProtectedRoutes><LandLordBooked /></ProtectedRoutes>} />
+      <Route exact path = "/landlord_payment/:id" element ={<ProtectedRoutes><Payment /></ProtectedRoutes>} />
+      <Route exact path = "/user_payment/:id" element = {<ProtectedRoutes><UserPayment /></ProtectedRoutes>} />
+      <Route exact path ="/user_download/:id" element = {<ProtectedRoutes><UserDownload /></ProtectedRoutes>} />
   </Routes>
   </AuthContextProvider>
   </>

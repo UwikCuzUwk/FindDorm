@@ -18,6 +18,7 @@ function Caccount() {
   const [password1, setPassword1] = useState('');
   const [error, setError] = useState('');
   const [value,setValue] = useState('')
+  const  [name,setName] = useState('');
   const provider = new GoogleAuthProvider();
 
   const handleCreateAccount = async () => {
@@ -31,8 +32,17 @@ function Caccount() {
       setError(null);
       const res = await createUserWithEmailAndPassword(auth, email, password)
           const user = res.user;  
+
+
+          await firestore.collection("user").add({
+            uid: user.uid,
+            Email:user.email,
+            Name: name,
+          })
+
           toast.success('Successfully Created account!', 
           {position: toast.POSITION.TOP_CENTER})
+          navigate('/')
 
     } catch (error) {
       if (error.code === 'auth/invalid-email') {
@@ -85,6 +95,10 @@ const handleGoogleSignUp = ()=>{
         <div class="login_input-box">
             <input type="text" class="login_input-field" id="email" autocomplete="of" value = {email} required onChange = {(e) =>setEmail(e.target.value) } />
             <label for="email">Email or phone</label>
+        </div>
+        <div class="login_input-box">
+            <input type="text" class="login_input-field" id="email" autocomplete="of" value = {name} required onChange = {(e) =>setName(e.target.value) } />
+            <label for="email">Full Name</label>
         </div>
         <div class="login_input-box">
             <input type="password" class="login_input-field" id="password1" autocomplete="off"  required onChange = {(e) => setPassword1(e.target.value) }/>

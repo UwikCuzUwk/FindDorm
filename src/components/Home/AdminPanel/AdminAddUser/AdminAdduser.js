@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore'
+import '../../LandlordPanel/LandLordBooking/LandLord.css'
 
  
 function AdminAdduser() {
@@ -29,7 +30,7 @@ function AdminAdduser() {
     const [address, setAddress] = useState('');
     const [contactno, setContactno] = useState('');
     const [user, setUser] = useState([]);
-    const [id,setId] =useState('');
+    const [id, setId] =useState('');
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -50,10 +51,6 @@ function AdminAdduser() {
     fetchUser();
   
 }, [])
-
-
-
-
     const handleAddRecord = async(e)=>{
     e.preventDefault();
     try {
@@ -152,9 +149,9 @@ const handleSearch =async()=>{
        <div class="container ">
 
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-          <div className="crud shadow-lg p-3 mb-5 mt-5 bg-body rounded"> 
-          <div class="row ">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+           <div className="crud shadow-lg p-3 mb-5 mt-5 bg-body rounded"> 
+           <div class="row ">
            
            <div class="col-sm-3 mt-5 mb-4 text-gred">
               <div className="search">
@@ -262,6 +259,7 @@ const handleSearch =async()=>{
         onHide={handleClose2}
         backdrop="static"
         keyboard={false}
+        dialogClassName="my-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title>Result</Modal.Title>
@@ -324,12 +322,6 @@ const handleSearch =async()=>{
         </Modal.Footer>
       </Modal>
       
-  
-
-
-
-
-
 
 
        </div>  
