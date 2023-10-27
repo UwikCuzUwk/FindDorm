@@ -44,6 +44,7 @@ return () => unsubscribe();
 
   return (
 <>
+<br />
 <LandlordNavbar />
 <head>
  <meta charset="UTF-8" />
@@ -71,21 +72,23 @@ return () => unsubscribe();
                       <div class="card-body">
                           <h5 class="card-title">{userss.Name}
                     </h5>
-                          <p class="card-text">Welcome to mobile legends 10 hours til the enemy reaches the battlefield smash them</p>
+                         
                       </div>
                       <div class="mb-5 d-flex justify-content-around">
                           <h3>₱{userss.Price}</h3>
                       </div>
                        <Link to = {`/landlord_view/${userss.id}`} >
-                        <button class="btn btn-primary w-100">Overview</button>
+                        <button class="btn btn-primary w-100">view</button>
                        </Link>
                   </div>
               </div>  
               
                 )
               
-                })}
-                <p>Loading</p>
+                })
+        
+                }
+                      <p>No Bookings</p>
 
      </div>
           

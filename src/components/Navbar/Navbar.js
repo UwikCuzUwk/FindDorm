@@ -20,6 +20,7 @@ function Navbar() {
         <li><a class="" href="/">Home</a></li>
         <li><a href="/login_page">Login</a></li>
         <li><a href="/signup_page">Signup</a></li>
+        
       </ul>
     </nav>
   </body>

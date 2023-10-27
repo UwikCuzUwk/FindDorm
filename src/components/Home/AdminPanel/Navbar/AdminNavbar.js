@@ -50,7 +50,7 @@ function AdminNavbar() {
       </label>
       <ul>
         <li><a class="" href="/admin_add">Add User</a></li>
-        <li><a href="/login_page">About Us</a></li>
+        <li><a href="/">About Us</a></li>
         <li><a  class = "backtohome" onClick = {handleLogout}>Logout</a></li>
       </ul>
     </nav>

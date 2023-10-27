@@ -123,13 +123,12 @@ const handleEdit =()=>{
 
   return (
   <>
-  <UserNavbar />
-  <div class="container ">
-
+<UserNavbar/>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <div class="container">
 <div className="crud shadow-lg p-3 mb-5 mt-5 bg-body rounded"> 
-<div class="row ">
+<div class="row">
 
 <div class="col-sm-3 mt-5 mb-4 text-gred">
   <div className="search">
@@ -137,7 +136,7 @@ const handleEdit =()=>{
     </form>
   </div>    
   </div>  
-  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-gred" style={{color:"green"}}><h2>Accepted Booked</h2></div>
+  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-center" style={{color:"green"}}><h2>Accepted Booked</h2></div>
 </div>  
 <div class="row">
     <div class="table-responsive " >
@@ -147,6 +146,7 @@ const handleEdit =()=>{
                 <th>#</th>
                 <th>Name </th>
                 <th>Email </th>
+                <th>Room Name</th>
                 <th>Owner Name</th>
                 <th>Status </th>
                 <th>Payment Cash </th>
@@ -161,6 +161,7 @@ const handleEdit =()=>{
                    <td>{users.Name}</td>
                    <td>{users.Email}</td>
                    <td>{users.Owner}</td>
+                   <td>{users.Owner}</td>
                     <td>{users.Status}</td>
                    <td>Cash</td>
           
@@ -168,7 +169,7 @@ const handleEdit =()=>{
 
                    <td>
                  
-                   <a href="#" class="delete"onClick={()=>handleDelete(users.id)} title="Delete" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">&#xE872;</i></a>
+      
                    <Link to ={`/user_payment/${users.uid}`}>
                    
                    <a href="#" class="delete"title="View Payment" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">payment</i></a>
@@ -196,20 +197,16 @@ const handleEdit =()=>{
 </div>  
 </div>
 </div>
-<div class="container ">
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<div class="container">
 <div className="crud shadow-lg p-3 mb-5 mt-5 bg-body rounded"> 
 <div class="row ">
-
 <div class="col-sm-3 mt-5 mb-4 text-gred">
   <div className="search">
     <form class="form-inline">
     </form>
   </div>    
   </div>  
-  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-gred" style={{color:"red"}}><h2>Pending Booked</h2></div>
+  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-center" style={{color:"red"}}><h2>Pending Booked</h2></div>
 </div>  
 <div class="row">
     <div class="table-responsive " >

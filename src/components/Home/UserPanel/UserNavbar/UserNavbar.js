@@ -2,6 +2,7 @@ import React from 'react'
 import '../../../Navbar/Navbar.css'
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import firebase from 'firebase/compat/app'
 
 
 export default function UserNavbar() {
@@ -22,6 +23,7 @@ export default function UserNavbar() {
                 'Log out!',
                 'Your Successfuly Log out.',
                 'success',
+                  firebase.auth().signOut(),
                  navigate('/login_page')
               )
             }
@@ -45,9 +47,9 @@ export default function UserNavbar() {
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a class="" href="/user_home">Home</a></li>
-        <li><a href="">About Us</a></li>
-        <li><a href="/user_booked">Booked</a></li>
+        <li><a class = "" href="/user_home">Home</a></li>
+        <li><a class = "" href="/user_booked">Booked</a></li>
+        <li><a class = "" href="/user_profile">Profile</a></li>
         <li><a  class = "backtohome" onClick = {handleLogout}>Logout</a></li>
       </ul>
     </nav>

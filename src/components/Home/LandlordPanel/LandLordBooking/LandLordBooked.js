@@ -15,10 +15,15 @@ function LandLordBooked() {
   const [user, setUser] = useState('');
   const [pendingBookings, setPendingBookings] = useState([]);
   const [acceptBookings, setAcceptBookings] = useState([]);
+  const [userselect, setUserSelect] = useState('');
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+
+  
+
 
   useEffect(() => {
    
@@ -95,10 +100,6 @@ const fetchUserItems = async (uid) => {
   return () => unsubscribe();
 
   }, []);
-
-
-
-
 
   const handleDelete =async(id)=>{
     try{
@@ -312,11 +313,11 @@ const handlePayment = async(id)=>{
         dialogClassName="my-modal"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add Record</Modal.Title>
+          <Modal.Title>User Information</Modal.Title>
         </Modal.Header>
             <Modal.Body>
           <form>
-            <p>ha;lsdjflasjdfl</p>
+           
           </form>
             </Modal.Body>
  

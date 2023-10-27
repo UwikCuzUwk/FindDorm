@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react'
 import './UserView.css'
 import { auth, firestore, storage} from '../../../Database/Database';
 import firebase from 'firebase/compat/app'
-import { addDoc, collection, deleteDoc, getDocs, doc, put} from "firebase/firestore"; 
+import { addDoc, collection, deleteDoc, getDocs, doc, put, setIndexConfiguration} from "firebase/firestore"; 
 import { useParams, useNavigate } from 'react-router-dom';
 import UserNavbar from '../UserNavbar/UserNavbar';
 import { Link } from 'react-router-dom';
@@ -31,9 +31,14 @@ function UserView() {
     const [hover, setHover] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const  [userItem, setUserItems] =useState([]);
-    const [totalRating, setTotalRating] = useState(0);
+    const [userID, setUserID] = useState('');
     const [averageRating, setAverageRating] = useState(0);
     const [userRating, setUserRating] = useState(null);
+    const [name, setUserName] = useState('');
+    const [contact, setContact] = useState('');
+    const [address, setAddress] = useState('');
+    const [email, setEmaill] = useState('');
+    const [aminity, setAminity] = useState([]);
 
     useEffect(() => {
       const fetchUserImages = async () => {
@@ -44,7 +49,9 @@ function UserView() {
           if (doc.exists) {
             const data = doc.data();
             setUserItems(data.Link || []);
+            setUserID(data.uid);
             setUser(data)
+            setAminity(data.Message|| [])
           } else {
             console.log('No such document');
           }
@@ -55,10 +62,33 @@ function UserView() {
   
       fetchUserImages();
     }, []);
- 
     
-
-
+  
+      const currentUser1 = firebase.auth().currentUser;
+      if (currentUser1) {
+        const userCollection = firebase.firestore().collection('userAdmin');
+  
+        userCollection
+          .where('uid', '==', userID)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const userData = doc.data();
+              setUserName(userData.Name);
+              setContact(userData.Contact);
+              setAddress(userData.Address);
+              setEmaill(userData.Email);
+            
+            });
+          })
+          .catch((error) => {
+            console.error('Error fetching user data:', error);
+          });
+      }
+  
+   
+  
+  
 const handleBooking =async()=>{
    navigate = ('/user_book')
 }
@@ -101,6 +131,7 @@ const handleReview=async()=>{
 
   return (
 <>
+<br />
 <UserNavbar />
 
 <head>
@@ -114,11 +145,10 @@ const handleReview=async()=>{
                                 <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'></script>
                                 <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js'></script>
                             </head>
-                            <body oncontextmenu='return false' class='snippet-body flex-column d-flexs flex-md-row-reverse'>
-                            <section class="pt-5 pb-5 d-flex ">
                             <div class="container">
-    <h1 class="text-center">{user.Name}</h1>
-    <div class="col-md text-right">
+                              <br />
+                              <h1 class="text-center">{user.Name}</h1>
+                            <div class="col-md text-right">
                 <a class="btn btn-primary mb-4 mr-1" href="/user_location" >
                     Location
                 </a>
@@ -127,6 +157,114 @@ const handleReview=async()=>{
                        </Link>
                        <button  class="btn btn-primary mb-4 mr-1" onClick={handleRate}>Rate</button>
             </div>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card card-margin">
+            <div class="card-header no-border">
+                <h5 class="card-title">Owner's Information</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="widget-49">
+                    <div class="widget-49-title-wrapper">
+                        <div class="widget-49-meeting-info">
+                            <span class="widget-49-pro-title"></span>
+                            <span class="widget-49-meeting-time"></span>
+                        </div>
+                    </div>
+                    <ol class="widget-49-meeting-points">
+                    <li class="widget-49-meeting-item" style ={{color:"black"}}><span>Name:      {name}</span></li>
+                    <li class="widget-49-meeting-item" style ={{color:"black"}}><span>Contact:      {contact}</span></li>
+                    <li class="widget-49-meeting-item" style ={{color:"black"}}><span>Email:      {email}</span></li>
+                    <li class="widget-49-meeting-item" style ={{color:"black"}}><span>Address:      {address}</span></li>
+                    </ol>
+                 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card card-margin">
+            <div class="card-header no-border">
+                <h5 class="card-title">Amenities</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="widget-49">
+                    <div class="widget-49-title-wrapper">
+                        <div class="widget-49-meeting-info">
+                        </div>
+                    </div>
+                    {aminity.map((aminities, index)=>{
+                      return(
+                             <div>
+        
+  
+                        <li class="widget-49-date-day"><span>{aminities}</span></li>
+         
+          
+                              </div>
+                      )
+                    })}
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card card-margin">
+            <div class="card-header no-border">
+                <h5 class="card-title">Available Slot</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="widget-49">
+                    <div class="widget-49-title-wrapper">
+                        <div class="widget-49-date-success">
+                            <span class="widget-49-date-day">{user.Available}</span>
+                        </div>
+          
+                    </div>  
+                  
+            
+                </div>
+            </div>
+      
+        </div>
+        
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-margin">
+            <div class="card-header no-border">
+                <h5 class="card-title">Price</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="widget-49">
+                    <div class="widget-49-title-wrapper">
+                        <div class="widget-49-date-success">
+                            <span class="widget-49-date-day">₱{user.Price}</span>
+                        </div>
+          
+                    </div>  
+                  
+            
+                </div>
+            </div>
+      
+        </div>
+    </div>
+
+
+
+    
+</div>
+</div>
+
+
+
+  <body oncontextmenu='return false' class='snippet-body flex-column d-flexs flex-md-row-reverse'>
+                            <section class="pt-5 pb-5 d-flex ">
+                            <div class="container">
+                            <h1 class="text-center">Photos</h1>
+    
     <div class="row">
         <div class="row row-cols-1 row-cols-md-3 g-1 py-5">
           
@@ -137,15 +275,11 @@ const handleReview=async()=>{
                   <div class="card">
                       <img src={imageLink} class="card-img-top" alt="..." />
                       <div class="card-body">
-                          <h5 class="card-title">{user.Name}
-                    </h5>
-                          <p class="card-text">{user.Message}</p>
                       </div>
                       <div class="mb-5 d-flex justify-content-around">
-                          <h3>₱{user.Price}</h3>
+                  
                          
                       </div>
-                      <a href="#" class="delete"onClick={handleReview} title="Rating" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">rate_review</i></a>
                   </div>
               </div>  
                 

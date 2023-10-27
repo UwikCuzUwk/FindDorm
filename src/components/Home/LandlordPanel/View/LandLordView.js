@@ -31,8 +31,9 @@ useEffect(() => {
   }, []);
 
   return (
+   
    <>
-   <>
+   <br></br>
 <LandlordNavbar />
 
 <head>
@@ -59,16 +60,12 @@ useEffect(() => {
                   <div class="card">
                       <img src={imageLink} class="card-img-top" alt="..." />
                       <div class="card-body">
-                          <h5 class="card-title">{user.Name}
-                    </h5>
-                          <p class="card-text">Welcome to mobile legends 10 hours til the enemy reaches the battlefield smash them</p>
                       </div>
                       <div class="mb-5 d-flex justify-content-around">
-                          <h3>₱{user.Price}</h3>
+                    
                       </div>
-                       <Link to = {`/landlord_view/${''}`} >
-                        <button class="btn btn-primary w-100">Overview</button>
-                       </Link>
+                   
+                     
                   </div>
               </div>  
               
@@ -87,7 +84,7 @@ useEffect(() => {
 
 </>
    
-   </>
+
   )
 }
 

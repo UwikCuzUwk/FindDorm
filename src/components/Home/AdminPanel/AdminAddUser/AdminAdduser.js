@@ -68,6 +68,7 @@ function AdminAdduser() {
           Name: name,
           Contact: contactno,
           Address:address,
+          Photo: "",
           isAdmin: "isAdmin",
         });
         setShow(false);

@@ -19,6 +19,8 @@ function Caccount() {
   const [error, setError] = useState('');
   const [value,setValue] = useState('')
   const  [name,setName] = useState('');
+  const [contact, setContact] = useState('');
+  const [address, setAddress] = useState('')
   const provider = new GoogleAuthProvider();
 
   const handleCreateAccount = async () => {
@@ -38,6 +40,8 @@ function Caccount() {
             uid: user.uid,
             Email:user.email,
             Name: name,
+            Contact:contact,
+            Address:address,
           })
 
           toast.success('Successfully Created account!', 
@@ -92,13 +96,21 @@ const handleGoogleSignUp = ()=>{
             <p class= 'forgot_tittle'>Create Account</p>
         
         </div>
-        <div class="login_input-box">
-            <input type="text" class="login_input-field" id="email" autocomplete="of" value = {email} required onChange = {(e) =>setEmail(e.target.value) } />
-            <label for="email">Email or phone</label>
+        <div class="login_input-box ">
+            <input type="text" class="login_input-field" id="email" autocomplete="off" value = {email} required onChange = {(e) =>setEmail(e.target.value) } />
+            <label for="password">Email or phone</label>
         </div>
         <div class="login_input-box">
-            <input type="text" class="login_input-field" id="email" autocomplete="of" value = {name} required onChange = {(e) =>setName(e.target.value) } />
-            <label for="email">Full Name</label>
+            <input type="text" class="login_input-field" id="email" autocomplete="off" value = {name} required onChange = {(e) =>setName(e.target.value) } />
+            <label for="password">Full Name</label>
+        </div>
+        <div class="login_input-box">
+            <input type="text" class="login_input-field" id="email" autocomplete="off" value = {contact} required onChange = {(e) =>setContact(e.target.value) } />
+            <label for="password">Contact No</label>
+        </div>
+        <div class="login_input-box">
+            <input type="text" class="login_input-field" id="email" autocomplete="off" value = {address} required onChange = {(e) =>setAddress(e.target.value) } />
+            <label for="password">Address</label>
         </div>
         <div class="login_input-box">
             <input type="password" class="login_input-field" id="password1" autocomplete="off"  required onChange = {(e) => setPassword1(e.target.value) }/>

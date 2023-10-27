@@ -21,6 +21,8 @@ import Home from './components/LoginPanel/Home/Home'
 import Payment from './components/Home/LandlordPanel/Payment/Payment'
 import UserPayment from './components/Home/UserPanel/Pending/UserPayment'
 import UserDownload from './components/Home/UserPanel/UserDownload/UserDownload'
+import UserProfile from './components/Home/UserPanel/UserPage/UserProfile'
+import LandlordProfile from './components/Home/LandlordPanel/Profile/LandlordProfile'
 
 
 
@@ -48,6 +50,8 @@ function App() {
       <Route exact path = "/landlord_payment/:id" element ={<ProtectedRoutes><Payment /></ProtectedRoutes>} />
       <Route exact path = "/user_payment/:id" element = {<ProtectedRoutes><UserPayment /></ProtectedRoutes>} />
       <Route exact path ="/user_download/:id" element = {<ProtectedRoutes><UserDownload /></ProtectedRoutes>} />
+      <Route exact path = "/user_profile" element = {<ProtectedRoutes><UserProfile /></ProtectedRoutes>} /> 
+      <Route exact path = "/landlord_profile" element = {<ProtectedRoutes><LandlordProfile /></ProtectedRoutes>} />
   </Routes>
   </AuthContextProvider>
   </>

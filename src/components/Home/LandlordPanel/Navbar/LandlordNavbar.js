@@ -2,6 +2,7 @@ import React from 'react'
 import '../../../Navbar/Navbar.css'
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import firebase from 'firebase/compat/app'  
 
 
 export default function LandlordNavbar() {
@@ -23,6 +24,7 @@ export default function LandlordNavbar() {
                 'Log out!',
                 'Your Successfuly Log out.',
                 'success',
+                firebase.auth().signOut(),
                  navigate('/login_page')
               )
             }
@@ -52,6 +54,7 @@ export default function LandlordNavbar() {
         <li><a class="" href="/landlord_home">Home</a></li>
         <li><a href="/landlord_add">Add </a></li>
         <li><a href="/landlord_booked">Booked </a></li>
+        <li><a href="/landlord_profile">Profile </a></li>
         <li><a  class = "backtohome" onClick = {handleLogout}>Logout</a></li>
       </ul>
     </nav>

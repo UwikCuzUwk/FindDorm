@@ -1,7 +1,6 @@
 import React,{useEffect ,useState} from 'react'
 import UserNavbar from '../UserNavbar/UserNavbar'
 import './UserHome.css'
-import '../../LandlordPanel/LandLordBooking/LandLord.css'
 import { Button,Modal,Input } from 'react-bootstrap';
 
 
@@ -25,17 +24,31 @@ export default function UserHome() {
   const [user, setCurrentUser]= useState('');
   const [users, setUser] =useState([]);
   const  [userItem, setUserItems] =useState([]);
-
+  const [userItem1, setUserItems1] =useState('');
+  const [userName, setUserName] =useState('');  
   useEffect(() => {
    
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setCurrentUser(user);
         fetchUserItems(user.uid);
+        fetchUserItems1(user.uid);
       } else {
         setCurrentUser(null);
       }
     });
+
+    const fetchUserItems1 = async (uid) => {
+      try {
+        const db = firebase.firestore();
+        const itemsCollection = db.collection('user');
+        const querySnapshot= await itemsCollection.where('uid', '==', uid).get();
+        const itemsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setUserItems1(itemsData);
+      } catch (error) {
+        console.error('Error fetching user items:', error);
+      }
+    };
 
     const fetchUser = async(e) =>{
     const itemsRef = firestore.collection('landlordData')
@@ -67,13 +80,34 @@ const fetchUserItems = async (uid) => {
       console.error('Error fetching user items:', error);
     }
   };
-  
   fetchUser();
   fetchUserItems();
+  fetchUserItems1();
 
   return () => unsubscribe();
 
   }, []);
+
+  const currentUser = firebase.auth().currentUser;
+
+    if (currentUser) {
+      const userCollection = firebase.firestore().collection('user');
+
+      userCollection
+        .where('uid', '==', currentUser.uid)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const userData = doc.data();
+            setUserName(userData.Name);
+      
+          });
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error);
+        });
+    }
+
  
   const db = firebase.firestore();
   const collectionRef = db.collection('landlordData'); 
@@ -114,7 +148,9 @@ const handleSearch=async()=>{
 
   return (
  <>
- <UserNavbar />
+<br />
+<UserNavbar />
+<br />
  <head>
  <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -124,13 +160,13 @@ const handleSearch=async()=>{
        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
 </head>
-
 <body>
-
-     
-    <div class="container py-5">
-      
+    <div class="container">
+      <br />
     <h1 class="text-center">Dorm For Rent</h1>
+   <p class="text-sm-end"> <i class="material-icons" style={{color:"green" }}>account_circle</i><h1 style={{color:"Orange"}}>Hi!  {userName}  </h1> </p> 
+
+  
     <div class="input-group rounded">
   <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"   value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}    aria-describedby="search-addon" />
   <span class="input-group-text border-0" id="search-addon" onClick={handleSearch}>
@@ -146,8 +182,7 @@ const handleSearch=async()=>{
                       <div class="card-body">
                           <h5 class="card-title">{userss.Name}
                     </h5>
-                    <p class="card-text"><i class="material-icons">location_on</i>{userss.Location}</p>
-                          <p class="card-text">Welcome to mobile legends 10 hours til the enemy reaches the battlefield smash them</p>
+                    <p class="card-text"><i class="material-icons">location_on</i>{userss.Street + " " + userss.Barangay + " " + userss.Town + " " + userss.City}</p>
                       </div>
                       <div class="mb-5 d-flex justify-content-around">
                           <h3>₱{userss.Price}</h3>
@@ -156,7 +191,7 @@ const handleSearch=async()=>{
                        </Link>
                       </div>
                        <Link to = {`/user_view/${userss.id}`} >
-                        <button class="btn btn-primary w-100">Overview</button>
+                        <button class="btn btn-primary w-100">View</button>
                        </Link>
                   </div>
               </div>  
