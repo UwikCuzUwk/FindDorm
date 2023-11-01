@@ -28,6 +28,7 @@ const [userAge, setUserAge] = useState('')
 const [userGender, setUserGender] = useState('')
 const [userID, setuserID] = useState('');
 const [bookingStatus, setBookingStatus] = useState(null);
+const [available, setAvailable] = useState('');
 
 
 
@@ -36,6 +37,7 @@ const [bookingStatus, setBookingStatus] = useState(null);
   itemRef.get().then((doc)=>{
       if(doc.exists) {
           setUsers(doc.data());
+          setAvailable(doc.data().Available);
       }else{
           console.log("Error Getting your data!")
       }
@@ -148,8 +150,9 @@ const fetchUserItems = async (uid) => {
 
 const handleSubmit = async (e) => {
   e.preventDefault(); 
+  const newAvailable = available - 1;
   if(bookingStatus!=='Accept'){
-    if(userss.Available ===0){
+    if(newAvailable === 0){
       toast.error("No Room Available")
     }else{
       Swal.fire({
