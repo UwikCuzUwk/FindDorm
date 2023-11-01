@@ -4,7 +4,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import {getStorage} from 'firebase/storage'
 
-{/*const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyDLxaZMYRSo6eBgIr8VVS62yB6ADYf8XIk",
   authDomain: "dormifind.firebaseapp.com",
   projectId: "dormifind",
@@ -12,7 +12,7 @@ import {getStorage} from 'firebase/storage'
   messagingSenderId: "175212554402",
   appId: "1:175212554402:web:07e860d1079e8eec210ffb"
 };
-*/}
+{/*
  //Final Database
   const firebaseConfig = {
     apiKey: "AIzaSyBEbc7pGy613wopUp-73TP3t2rzAf_v_iM",
@@ -22,7 +22,7 @@ import {getStorage} from 'firebase/storage'
    messagingSenderId: "84450804315",
    appId: "1:84450804315:web:9cf1fae00b824d1b33f57e"
 };
-
+*/}
 firebase.initializeApp(firebaseConfig);
 
 export const auth = firebase.auth();
