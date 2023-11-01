@@ -5,9 +5,11 @@ import firebase from 'firebase/compat/app';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from '../../../Navbar/Footer';
+import Swal from 'sweetalert2';
 
 function UserBook() {
-
+const navigate = useNavigate();
 const [age, setAge] = useState('');
 const [sex, setSex] = useState('');
 const [message, setMessage] = useState('');
@@ -22,6 +24,10 @@ const [accepted, setAcceptedBooking] = useState();
 const [userEmail, setUserEmail] = useState(''); 
 const [userContact, setUserContact] = useState('')
 const [userAddress, setUserAddress] = useState('')
+const [userAge, setUserAge] = useState('')
+const [userGender, setUserGender] = useState('')
+const [userID, setuserID] = useState('');
+const [bookingStatus, setBookingStatus] = useState(null);
 
 
 
@@ -41,6 +47,7 @@ const [userAddress, setUserAddress] = useState('')
       if (user) {
         setCurrentUser(user);
         fetchUserItems(user.uid);
+        setuserID(user.uid);
       } else {
         setCurrentUser(null);
       }
@@ -104,6 +111,8 @@ const fetchUserItems = async (uid) => {
             setUserEmail(userData.Email);
             setUserAddress(userData.Address);
             setUserContact(userData.Contact)
+            setUserAge(userData.Age)
+            setUserGender(userData.Gender)
           });
         })
         .catch((error) => {
@@ -111,39 +120,87 @@ const fetchUserItems = async (uid) => {
         });
     }
   }, []);
+  useEffect(() => {
+    // Reference to the Firestore collection
+    const userBookingRef = firebase.firestore().collection('userBooking');
+
+    // Query the collection to find a document with matching UID
+    userBookingRef
+      .where('uid', '==', userID)
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          // If a document is found, check the status
+          const bookingData = querySnapshot.docs[0].data();
+          setBookingStatus(bookingData.Status);
+        } else {
+          // If no document is found, the user has not accepted
+          setBookingStatus('Not Accepted');
+        }
+      })
+      .catch((error) => {
+        console.error('Error getting booking data:', error);
+      });
+  }, [userID]);
 
 
 
 
 const handleSubmit = async (e) => {
-  e.preventDefault();
-
-
-  const user = firebase.auth().currentUser;
-
-  if (user) {
-
+  e.preventDefault(); 
+  if(bookingStatus!=='Accept'){
+    if(userss.Available ===0){
+      toast.error("No Room Available")
+    }else{
+      Swal.fire({
+        title: 'Do you want to Inquire?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+        customClass: {
+          actions: 'my-actions',
+          cancelButton: 'order-1 right-gap',
+          confirmButton: 'order-2',
+          denyButton: 'order-3',
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          
           const db = firebase.firestore();
           const usersRef = db.collection('userBooking')
            usersRef.add({
             uid:user.uid,
             Email:userEmail,
             Name:userName,
-            Age:age,
+            Age:userAge,
+            Gender:userGender,
             Contact:userContact,
+            OwnerEmail:userss.Email,  
             Address:userAddress,
+            Price:userss.Price,
             DormName:userss.Name,
             Owner:userss.LandlordName,
             LandLord:userss.LandLord,
             Status:'Pending',
             
           });
- 
-          setAge('');
-          setSex('');
     toast.success('Booking Request Sent Successfully')
-      
+          Swal.fire('Saved!', '', 'success')
+          navigate("/user_home")
+        } else if (result.isDenied) {
+          Swal.fire('Inquire are not saved', '', 'info')
         }
+      })
+    }
+  }else{
+    toast.error("You have already accepted the booking")
+  }
+
+
+   
+    
+         
 };
 
 
@@ -175,23 +232,9 @@ const handleSubmit = async (e) => {
 
           <form action="#!">
             <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
- 
-              <div class="col-12 col-md-6">
-                <label for="phone" class="form-label">Age</label>
-                <div class="input-group">
-                  <input type="tel" class="form-control" id="age" name="age" value={age} onChange={(e)=>setAge(e.target.value)} />
-                </div>
-              </div>
-
-              <div class="col-12 col-md-6">
-                <label for="phone" class="form-label">Sex</label>
-                <div class="input-group">
-                  <input type="tel" class="form-control" id="sex" name="sex" value= {sex} onChange ={(e) =>setSex(e.target.value)} />
-                </div>
-              </div>
               <div class="col-12">
                 <div class="d-grid">
-                  <button class="btn btn-primary btn-lg" type="submit" onClick={handleSubmit}>Submit</button>
+                  <button class="btn btn-primary btn-lg" type="submit" onClick={handleSubmit}>Inqure Now!</button>
                 </div>
               </div>
             </div>
@@ -203,6 +246,7 @@ const handleSubmit = async (e) => {
   </div>
 </section>
 < ToastContainer />
+<Footer />
 </>
   )
 }

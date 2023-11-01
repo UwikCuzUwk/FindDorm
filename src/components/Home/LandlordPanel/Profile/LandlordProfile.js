@@ -9,6 +9,7 @@ import { ref, getDownloadURL, uploadBytesResumable, deleteObject   } from "fireb
 import { addDoc, collection, deleteDoc, getDocs, doc, put} from "firebase/firestore"; 
 import { auth, storage, firestore } from '../../../Database/Database'
 import LandlordNavbar from '../Navbar/LandlordNavbar';
+import Footer from '../../../Navbar/Footer';
 
 
 function LandlordProfile() {
@@ -54,7 +55,7 @@ if (user) {
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const userData = doc.data();
-        setUserName(userData.Name);
+        setUserName(userData.Name); 
         setAddress(userData.Address);
         setUserEmail(userData.Email);
         setContact(userData.Contact);
@@ -173,6 +174,7 @@ const handleUpload =async()=>{
   </div>
 </section>
 < ToastContainer />
+<Footer />
    </>
   )
 }

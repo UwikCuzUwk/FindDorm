@@ -8,6 +8,7 @@ import UserNavbar from '../UserNavbar/UserNavbar';
 import { Link } from 'react-router-dom';
 import { Button,Modal,Input } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
+import Footer from '../../../Navbar/Footer';
 
 
 
@@ -32,13 +33,12 @@ function UserView() {
     const [submitted, setSubmitted] = useState(false);
     const  [userItem, setUserItems] =useState([]);
     const [userID, setUserID] = useState('');
-    const [averageRating, setAverageRating] = useState(0);
-    const [userRating, setUserRating] = useState(null);
     const [name, setUserName] = useState('');
     const [contact, setContact] = useState('');
     const [address, setAddress] = useState('');
     const [email, setEmaill] = useState('');
     const [aminity, setAminity] = useState([]);
+    const [available, setAvailable] = useState('');
 
     useEffect(() => {
       const fetchUserImages = async () => {
@@ -52,6 +52,7 @@ function UserView() {
             setUserID(data.uid);
             setUser(data)
             setAminity(data.Message|| [])
+            setAvailable(data.Available || [])
           } else {
             console.log('No such document');
           }
@@ -87,7 +88,7 @@ function UserView() {
       }
   
    
-  
+  const available2 = parseInt(available)-1;
   
 const handleBooking =async()=>{
    navigate = ('/user_book')
@@ -149,12 +150,15 @@ const handleReview=async()=>{
                               <br />
                               <h1 class="text-center">{user.Name}</h1>
                             <div class="col-md text-right">
-                <a class="btn btn-primary mb-4 mr-1" href="/user_location" >
+                               <Link to = {`/user_booking/${id}`} >
+                        <button  class="btn btn-primary mb-4 mr-1">Book Now </button>
+                       </Link>
+                       <Link to = {`/user_location/${id}`} >
+                       <a class="btn btn-primary mb-4 mr-1" href="/user_location" >
                     Location
                 </a>
-                <Link to = {`/user_booking/${id}`} >
-                        <button  class="btn btn-primary mb-4 mr-1">Book Now</button>
                        </Link>
+              
                        <button  class="btn btn-primary mb-4 mr-1" onClick={handleRate}>Rate</button>
             </div>
 <div class="row">
@@ -218,7 +222,7 @@ const handleReview=async()=>{
                 <div class="widget-49">
                     <div class="widget-49-title-wrapper">
                         <div class="widget-49-date-success">
-                            <span class="widget-49-date-day">{user.Available}</span>
+                            <span class="widget-49-date-day">{available2}</span>
                         </div>
           
                     </div>  
@@ -398,7 +402,7 @@ const handleReview=async()=>{
         </Modal.Footer>
       </Modal>	
 
-
+<Footer />
 </>
   )
 }

@@ -22,12 +22,24 @@ function Caccount() {
   const [contact, setContact] = useState('');
   const [address, setAddress] = useState('')
   const provider = new GoogleAuthProvider();
+  const [selectedValue, setSelectedValue] = useState('');
+  const [age, setAge] = useState('');
+
+  const handleRadioChange =(event) =>{
+    setSelectedValue(event.target.value);
+  }
+
+
+
+
+
+
 
   const handleCreateAccount = async () => {
   if(password ===password1){
-    if(!email.endsWith('@gmail.com'))
+    if(!email.endsWith('@gmail.com')|| name ===''||contact.length<11||address ==='' || contact.length>11 || age.length>2)
     {
-      toast.error('Input a valid Gmail account', 
+      toast.error('Invalid Account make sure you check the email, contact, age and adress if correct!', 
       {position: toast.POSITION.TOP_CENTER})
   }else{
     try {
@@ -42,6 +54,8 @@ function Caccount() {
             Name: name,
             Contact:contact,
             Address:address,
+            Age:age,
+            Gender:selectedValue,
           })
 
           toast.success('Successfully Created account!', 
@@ -101,17 +115,45 @@ const handleGoogleSignUp = ()=>{
             <label for="password">Email or phone</label>
         </div>
         <div class="login_input-box">
-            <input type="text" class="login_input-field" id="email" autocomplete="off" value = {name} required onChange = {(e) =>setName(e.target.value) } />
-            <label for="password">Full Name</label>
+            <input type="text" class="login_input-field" id="name" autocomplete="off" value = {name} required onChange = {(e) =>setName(e.target.value) } />
+            <label for="text">Full Name</label>
         </div>
         <div class="login_input-box">
-            <input type="text" class="login_input-field" id="email" autocomplete="off" value = {contact} required onChange = {(e) =>setContact(e.target.value) } />
+            <input type="number" class="login_input-field" id="contact" autocomplete="off" value = {contact} required onChange = {(e) =>setContact(e.target.value) } />
             <label for="password">Contact No</label>
         </div>
         <div class="login_input-box">
-            <input type="text" class="login_input-field" id="email" autocomplete="off" value = {address} required onChange = {(e) =>setAddress(e.target.value) } />
+            <input type="text" class="login_input-field" id="address" autocomplete="off" value = {address} required onChange = {(e) =>setAddress(e.target.value) } />
             <label for="password">Address</label>
         </div>
+
+
+        <div class="d-flex flex-row">
+  <div class="p-2">
+  <div class="form-check">
+  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="Male" checked = {selectedValue==='Male'} onChange={handleRadioChange} />
+  <label class="form-check-label" for="flexRadioDefault1">Male</label>
+</div>
+
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="Female" checked = {selectedValue==='Female'} onChange={handleRadioChange} />
+  <label class="form-check-label" for="flexRadioDefault2">Female</label>
+</div> 
+  </div>
+</div>
+
+<div class="login_input-box">
+            <input type="number" class="login_input-field " id="age" autocomplete="off" value = {age} required onChange = {(e) =>setAge(e.target.value) } />
+            <label for="password">Age</label>
+        </div>
+
+
+
+
+
+
+
+
         <div class="login_input-box">
             <input type="password" class="login_input-field" id="password1" autocomplete="off"  required onChange = {(e) => setPassword1(e.target.value) }/>
             <label for="password">Password</label>

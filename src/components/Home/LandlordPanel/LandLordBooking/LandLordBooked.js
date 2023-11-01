@@ -8,6 +8,7 @@ import { deleteDoc, doc } from 'firebase/firestore';
 import LandlordNavbar from '../Navbar/LandlordNavbar';
 import { Link } from 'react-router-dom';
 import './LandLord.css'
+import Footer from '../../../Navbar/Footer';
 
 function LandLordBooked() {
   const [userItem, setUserItems]= useState([]);
@@ -16,10 +17,12 @@ function LandLordBooked() {
   const [pendingBookings, setPendingBookings] = useState([]);
   const [acceptBookings, setAcceptBookings] = useState([]);
   const [userselect, setUserSelect] = useState('');
-
+  const [landlordData, setLandLordData] = useState('')
+  const[available, setAvailable] = useState('');
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
 
 
   
@@ -33,6 +36,8 @@ function LandLordBooked() {
         fetchUserItems(user.uid);
         fetchPendingBookings(user.uid);
         fetchPendingBookings1(user.uid);
+        LandlordData(user.uid);
+    
       } else {
         setCurrentUser(null);
       }
@@ -43,13 +48,13 @@ function LandLordBooked() {
           const userDataCollection = await firestore.collection("landlordData").get();
           const userData = userDataCollection.docs.map((doc)=> doc.data());
           setUser(userData)
+
       }catch(error){
           console.error("Error fetching user", error.message);
       }
 
   }
   
-
 const fetchUserItems = async (uid) => {
     try {
       const db = firebase.firestore();
@@ -77,6 +82,21 @@ const fetchUserItems = async (uid) => {
       console.error('Error fetching pending bookings: ', error);
     }
   };
+  const LandlordData = async (uid) => {
+    try {
+      const collectionName = 'userBooking'; // Replace with your Firestore collection name
+      const querySnapshot = await firestore.collection(collectionName).where('LandLord', '==', uid).get();
+
+      const pendingBookingData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setLandLordData(pendingBookingData);
+    } catch (error) {
+      console.error('Error fetching pending bookings: ', error);
+    }
+  };
   const fetchPendingBookings1 = async (uid) => {
     try {
       const collectionName = 'userBooking'; // Replace with your Firestore collection name
@@ -92,7 +112,8 @@ const fetchUserItems = async (uid) => {
       console.error('Error fetching pending bookings: ', error);
     }
   };
-  
+ 
+ 
   fetchPendingBookings1();
   fetchPendingBookings();
   fetchUser();
@@ -113,26 +134,159 @@ const fetchUserItems = async (uid) => {
      }
   }
 
-  const handleAccept =async(id)=>{
-    const docRef = firestore.collection('userBooking').doc(id);
+  const handleAccept = async (id, LandLord) => {
 
-    docRef.update({Status:'Accept'})
-    .then(()=>{
-      console.log("Document status updated")
-    }).catch((error)=>{
-      console.log("Error updating your Document", error)
-    })
- 
-  }
+    const landlordCollectionRef = firebase.firestore().collection('landlordData');
+    const userBookingCollectionRef = firebase.firestore().collection('userBooking');
+    
+    try {
+      const userBookingDoc = await userBookingCollectionRef.doc(id).get();
+    
+      if (!userBookingDoc.exists) {
+        console.error("User booking not found.");
+        return;
+      }
+    
+      const userBookingData = userBookingDoc.data();
+      const userBookingLandLord = userBookingData.LandLord;
+      const userBookingName = userBookingData.DormName;
+      const userName = userBookingData.Name;
+      const userEmail = userBookingData.Email;
+      const userID = userBookingData.uid;
+      const price =userBookingData.Price;
+    
+    
+      const querySnapshot = await landlordCollectionRef
+        .where("Name", "==", userBookingName)
+        .where("LandLord", "==",userBookingLandLord )
+        .get();
+    
+      const updates = [];
+      let availableRooms = 0; // Initialize available rooms counter
+    
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        
+        // Check if Available is greater than 0 before updating
+        if (data.Available > 0) {
+          const newCount = data.Available - 1;
+          if (newCount === 0) {
+            availableRooms = 0; // Set available rooms to 0
+          } else {
+            availableRooms = newCount; // Update available rooms counter
+          }
+          
+          updates.push({
+            docRef: landlordCollectionRef.doc(doc.id),
+            data: { Available: newCount },
+          });
+        }
+      });
+    
+      if (availableRooms > 0) {
+        updates.push({
+          docRef: userBookingCollectionRef.doc(id),
+          data: { Status: 'Accept' },
+        });
+    
+        await Promise.all(updates.map(({ docRef, data }) => docRef.update(data)),
+        toast.success("Successfully Accepted", { delay: 1000 }));
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1; // Months are 0-indexed, so add 1.
+        const nextBillingDate = new Date(currentDate);
+        nextBillingDate.setDate(nextBillingDate.getDate() + 30);
+      
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    
+        // Add data to Firestore
+        firestore.collection('userPayment').add({
+          Name: userName,
+          Email:userEmail,
+          Landlord:userBookingLandLord,
+          DormName:userBookingName,
+          currentMonth: currentMonth,
+          nextBillingDate: nextBillingDate,
+          Status:"Not Paid",
+          CurrentDate: timestamp,
+          uid:userID,
+          Price:price,
+        });
+
+
+      } else {
+        toast.error("No available rooms for the user booking.");
+      }
+    } catch (error) {
+      console.error("Error accepting booking:", error);
+    }
+  };
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 const handleDecline= async(id)=>{
-  const docRef = firestore.collection('userBooking').doc(id);
+  const landlordCollectionRef = firebase.firestore().collection('landlordData');
+  const userBookingCollectionRef = firebase.firestore().collection('userBooking');
+  
+  try {
+    const userBookingDoc = await userBookingCollectionRef.doc(id).get();
+  
+    if (!userBookingDoc.exists) {
+      console.error("User booking not found.");
+      return;
+    }
+  
+    const userBookingData = userBookingDoc.data();
+    const userBookingLandLord = userBookingData.LandLord;
+    const userBookingName = userBookingData.DormName;
+    const userName = userBookingData.Name;
+    const userEmail = userBookingData.Email;
+  
+  
+    const querySnapshot = await landlordCollectionRef
+      .where("Name", "==", userBookingName)
+      .where("LandLord", "==",userBookingLandLord )
+      .get();
+  
+    const updates = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      
+     
+      
+        const newCount = data.Available + 1;
 
-  docRef.update({Status:'Pending'})
-  .then(()=>{
-    console.log("Document updated")
-  }).catch((error)=>{
-    console.log("Error updating document", error)
-  })
+        updates.push({
+          docRef: landlordCollectionRef.doc(doc.id),
+          data: { Available: newCount },
+        });
+      
+    });
+  
+      updates.push({
+        docRef: userBookingCollectionRef.doc(id),
+        data: { Status: 'Pending' },
+      });
+  
+      await Promise.all(updates.map(({ docRef, data }) => docRef.update(data)),
+      toast.success("Successfully Declined", { delay: 1000 }));
+      
+    
+  } catch (error) {
+    console.error("Error accepting booking:", error);
+  }
+
 }
 
 const handleView =async(id) =>{
@@ -175,6 +329,7 @@ const handlePayment = async(id)=>{
                 <th>Name </th>
                 <th>Email </th>
                 <th>Contact </th>
+                <th>DormName </th>
                 <th>Status </th>
                 <th>Payment Cash </th>
              
@@ -188,6 +343,7 @@ const handlePayment = async(id)=>{
                    <td>{users.Name}</td>
                    <td>{users.Email}</td>
                    <td>{users.Contact}</td>
+                   <td>{users.DormName}</td>
                     <td>{users.Status}</td>
                    <td>Cash</td>
           
@@ -195,10 +351,7 @@ const handlePayment = async(id)=>{
 
                    <td>
                    <a href="#" class="delete"onClick={()=>handleDelete(users.id)} title="Delete" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">&#xE872;</i></a>
-                  
-                   <a href="#" class="accept"onClick={()=>handleAccept(users.id)} title="Accept" data-toggle="tooltip" style={{color:"green"}}> <i class="large material-icons">check</i></a>
-                   <a href="#" class="decline"onClick={()=>handleDecline(users.id)} title="Decline" data-toggle="tooltip" style={{color:"red"}}> <i class="large material-icons">close</i></a>
-                   <a href="#" class="view"onClick={()=>handleView(users.id)} title="View" data-toggle="tooltip" style={{color:"green"}}> <i class="large material-icons">visibility</i></a>
+                   <a href="#" class="decline"onClick={()=>handleDecline(users.id, users.LandLord)} title="Decline" data-toggle="tooltip" style={{color:"red"}}> <i class="large material-icons">close</i></a>
                    <Link to ={`/landlord_payment/${users.uid}`}>
                    <a href="#" class="delete"title="Payment" data-toggle="tooltip" style={{color:"orange"}}> <i class="large material-icons">payment</i></a>
                     </Link>
@@ -254,8 +407,9 @@ const handlePayment = async(id)=>{
                 <th>#</th>
                 <th>Name </th>
                 <th>Email </th>
-                <th>Contact </th>
+                <th>Room </th>
                 <th>Status </th>
+      
                 <th>Payment Cash </th>
              
 
@@ -267,8 +421,10 @@ const handlePayment = async(id)=>{
                  <td>{index + 1}</td>
                    <td>{users.Name}</td>
                    <td>{users.Email}</td>
-                   <td>{users.Contact}</td>
+                   <td>{users.DormName}</td>
+                 
                     <td>{users.Status}</td>
+                  
                    <td>Cash</td>
           
              
@@ -276,11 +432,7 @@ const handlePayment = async(id)=>{
                    <td>
                    <a href="#" class="delete"onClick={()=>handleDelete(users.id)} title="Delete" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">&#xE872;</i></a>
                   
-                   <a href="#" class="delete"onClick={()=>handleAccept(users.id)} title="Accept" data-toggle="tooltip" style={{color:"green"}}> <i class="large material-icons">check</i></a>
-                   <a href="#" class="delete"onClick={()=>handleDecline(users.id)} title="Decline" data-toggle="tooltip" style={{color:"red"}}> <i class="large material-icons">close</i></a>
-                   <Link to ={`/landlord_payment/${users.uid}`}>
-                   <a href="#" class="delete"title="Payment" data-toggle="tooltip" style={{color:"orange"}}> <i class="large material-icons">payment</i></a>
-                    </Link>
+                   <a href="#" class="delete"onClick={()=>handleAccept(users.id, users.LandLord)} title="Accept" data-toggle="tooltip" style={{color:"green"}}> <i class="large material-icons">check</i></a>
                 </td>
                 </tr>
                 
@@ -329,7 +481,7 @@ const handlePayment = async(id)=>{
         </Modal.Footer>
       </Modal>
 < ToastContainer />
-  
+  <Footer />
   </>
   )
 }

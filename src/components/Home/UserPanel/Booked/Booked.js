@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+import Footer from '../../../Navbar/Footer';
 
 function Booked() {
   const [userItem, setUserItems]= useState([]);
@@ -217,6 +218,7 @@ const handleEdit =()=>{
                 <th>Name </th>
                 <th>Email </th>
                 <th>Owner Name</th>
+          
                 <th>Status </th>
                 <th>Payment Cash </th>
              
@@ -230,6 +232,7 @@ const handleEdit =()=>{
                    <td>{users.Name}</td>
                    <td>{users.Email}</td>
                    <td>{users.Owner}</td>
+             
                     <td>{users.Status}</td>
                    <td>Cash</td>
           
@@ -262,7 +265,7 @@ const handleEdit =()=>{
 </div>
 </div>
 < ToastContainer />
-  
+<Footer />
   </>
   )
 }

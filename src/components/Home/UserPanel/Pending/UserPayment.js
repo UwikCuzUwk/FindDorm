@@ -10,7 +10,7 @@ function UserPayment() {
     const [userItem, setUserItems]= useState([]);
     const [currentUser, setCurrentUser] = useState('');
     const [user, setUser] = useState('');
-    const [userData , setUserData] = useState([]);
+    const [userData ,setUserData ] = useState([]);
 
 
     useEffect(() => {
@@ -68,9 +68,50 @@ function UserPayment() {
     return () => unsubscribe();
   
     }, []);
- const handleDownload =async ()=>{
-alert("and pogi ni mikko")
- }
+    useEffect(() => {
+      const fetchUserItems = async () => {
+        try {
+          const userPaymentRef = firestore.collection('userPayment');
+          const querySnapshot = await userPaymentRef
+            .where('uid', '==', id)
+            .get();
+  
+          const userDataArray = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+  
+            const formattedTimestamp = data.CurrentDate?.seconds
+              ? new Date(data.CurrentDate.seconds * 1000).toLocaleString()
+              : 'N/A';
+  
+            const formattedTimestamp1 = data.nextBillingDate?.seconds
+              ? new Date(data.nextBillingDate.seconds * 1000).toLocaleString()
+              : 'N/A';
+            return {
+              id: doc.id,
+              Name: data.Name,
+              CurrentDate: formattedTimestamp,
+              Status: data.Status,
+              nextBillingDate: formattedTimestamp1,
+              DormName: data.DormName,
+              PreviousBill: data.PreviousBill,
+              Price:data.Price,
+              Balance:data.Balance,
+            };
+          });
+  
+          // Sort the userDataArray by 'CurrentDate' in ascending order
+          userDataArray.sort((a, b) => new Date(a.CurrentDate) - new Date(b.CurrentDate));
+  
+          setUserData(userDataArray);
+        } catch (error) {
+          console.error('Error fetching user items:', error);
+        }
+      };
+  
+      fetchUserItems();
+    }, [id]);
+
+
 
 
 
@@ -91,37 +132,39 @@ alert("and pogi ni mikko")
     </form>
   </div>    
   </div>  
-  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-gred" style={{color:"green"}}><h2>Current Payment</h2></div>     
+  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-gred" style={{color:"green"}}><h2> Payment</h2></div>     
 </div>  
 <div class="row">
     <div class="table-responsive " >
      <table class="table table-striped table-hover table-bordered">
         <thead>
             <tr>
-                <th>#</th>
+            <th>#</th>
                 <th>Name </th>
-                <th>Payment Cash </th>
+                <th>Previous Bill </th>
                 <th>Month </th>
                 <th>Next Billing </th>
+                <th>Room Name </th>
+                <th>Price </th>
+                <th>Balance </th>
                 <th>Status </th>
-                <th>Actions</th>
+           
             </tr>
-            {userItem.map ((users, index)=>{
+            {userData.map ((users, index)=>{
                 return(
               <tr key ={users.uid} >
                     <td>{index + 1}</td>
                     <td>{users.Name}</td>
-                    <td>Cash</td>
-                    <td>{users.Month}</td>
-                    <td>{users.NextBilling}</td>
+                    <td>{users.PreviousBill}</td>
+                  <td>{users.CurrentDate}</td>
+                 <td>{users.nextBillingDate}</td>
+                 <td>{users.DormName}</td>
+                 <td>{users.Price}</td>
+                 <td>{users.Balance}</td>
+
                     <td>{users.Status}</td>
-                   <td>
-          
-                 
-                   <Link to ={`/user_download/${users.uid}`}>
-                   <a href="#" class="delete" title="Download" data-toggle="tooltip" style={{color:"green"}}><i class="material-icons">file_download</i></a>
-                   </Link>
-                   </td>
+
+                  
                 </tr>
                 
                 )

@@ -23,6 +23,7 @@ import UserPayment from './components/Home/UserPanel/Pending/UserPayment'
 import UserDownload from './components/Home/UserPanel/UserDownload/UserDownload'
 import UserProfile from './components/Home/UserPanel/UserPage/UserProfile'
 import LandlordProfile from './components/Home/LandlordPanel/Profile/LandlordProfile'
+import ActiveRoom from './components/Home/UserPanel/ActiveDorm/ActiveRoom'
 
 
 
@@ -42,7 +43,7 @@ function App() {
       <Route exact path = "/admin_home" element ={<AdminHome />} />
       <Route exact path = "/admin_add" element ={<AdminAdduser />} />
       <Route exact path = "/user_view/:id" element ={<ProtectedRoutes><UserView /></ProtectedRoutes>} />
-      <Route exact path = "/user_location" element = {<ProtectedRoutes><Location /></ProtectedRoutes>} />
+      <Route exact path = "/user_location/:id" element = {<ProtectedRoutes><Location /></ProtectedRoutes>} />
       <Route exact path = "/user_booking/:id" element = {<ProtectedRoutes><UserBook /></ProtectedRoutes>} />
       <Route exact path = "/user_booked" element ={<ProtectedRoutes><Booked /></ProtectedRoutes>} />
       <Route exact path = "/landlord_view/:id" element ={<ProtectedRoutes><LandLordView /></ProtectedRoutes>} />
@@ -52,6 +53,8 @@ function App() {
       <Route exact path ="/user_download/:id" element = {<ProtectedRoutes><UserDownload /></ProtectedRoutes>} />
       <Route exact path = "/user_profile" element = {<ProtectedRoutes><UserProfile /></ProtectedRoutes>} /> 
       <Route exact path = "/landlord_profile" element = {<ProtectedRoutes><LandlordProfile /></ProtectedRoutes>} />
+      <Route exact path = "/user_active" element = {<ProtectedRoutes><ActiveRoom /></ProtectedRoutes>} />
+      
   </Routes>
   </AuthContextProvider>
   </>

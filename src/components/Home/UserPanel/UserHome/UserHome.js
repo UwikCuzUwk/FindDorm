@@ -12,6 +12,7 @@ import { addDoc, collection, deleteDoc, getDocs, doc, put, query, where, or} fro
 import 'firebase/firestore'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import Footer from '../../../Navbar/Footer';
 
 export default function UserHome() {
   const navigate = useNavigate();
@@ -123,10 +124,14 @@ const handleSearch=async()=>{
       const nameQuery = collectionRef.where('Name', '==', searchTerm);
       const genderQuery = collectionRef.where('Price', '==', searchTerm);
       const locationQuery = collectionRef.where('Location', '==', searchTerm);
+      const barangay = collectionRef.where('Barangay', '==', searchTerm);
+      const street = collectionRef.where('Street', '==', searchTerm);
+      const town = collectionRef.where('Town', '==', searchTerm);
+         const city = collectionRef.where('City', '==', searchTerm);
 
 
       // Combine the results of name and gender queries
-      Promise.all([nameQuery.get(), genderQuery.get(), locationQuery.get()]).then((querySnapshots) => {
+      Promise.all([nameQuery.get(), genderQuery.get(),city.get(), barangay.get(), town.get(), street.get(), locationQuery.get()]).then((querySnapshots) => {
         const matchingDocs = [];
         querySnapshots.forEach((querySnapshot) => {
           querySnapshot.forEach((doc) => {
@@ -213,7 +218,7 @@ const handleSearch=async()=>{
         onHide={handleClose2}
         backdrop="static"
         keyboard={false}  
-        dialogClassName="my-modal"
+        dialogClassName="my-modal gray"
       >
         <Modal.Header closeButton>
           <Modal.Title>Result</Modal.Title>
@@ -263,6 +268,7 @@ const handleSearch=async()=>{
       
 
       < ToastContainer />
+      <Footer />
  </>
   )
 }

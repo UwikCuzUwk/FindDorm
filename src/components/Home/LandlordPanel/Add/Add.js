@@ -3,18 +3,19 @@ import LandlordNavbar from '../Navbar/LandlordNavbar'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { Button,Modal} from 'react-bootstrap';
-import {useParams, useNavigate } from 'react-router-dom';
+import {useParams, useNavigate, Link} from 'react-router-dom';
 import { auth, firestore, storage} from '../../../Database/Database';
 import firebase from 'firebase/compat/app'
 import { ref, getDownloadURL, uploadBytesResumable, deleteObject   } from "firebase/storage";
 import { addDoc, collection, deleteDoc, getDocs, doc, updateDoc} from "firebase/firestore"; 
 import Swal from 'sweetalert2';
+import Footer from '../../../Navbar/Footer';
 
 
 
 
 function Add() {
-   
+   const navigate = useNavigate();
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -77,7 +78,7 @@ function Add() {
   const [contact10, setContact10] = useState('');
   const [photo10, setPhoto10] = useState('');
   const [userrName, setuserName] = useState('')
-
+  const [available2, setAvailable2] = useState('')
 
    useEffect(() => {
    
@@ -150,6 +151,7 @@ function Add() {
             querySnapshot.forEach((doc) => {
               const userData = doc.data();
               setOwnerName(userData.Name);
+              setAvailable2(userData.Available);
             });
           })
           .catch((error) => {
@@ -165,7 +167,7 @@ function Add() {
     
     
 
-  
+      const available3 = parseInt(available2) - 1;
 
 
 
@@ -188,6 +190,7 @@ const handleSearch =()=>{
 
 const handleAddRecord = async (e) => {
   e.preventDefault();
+  const available2 = parseInt(available) + 1;
   const urls = [];
   const user = firebase.auth().currentUser;
   for (const image of selectedImages) {
@@ -202,6 +205,7 @@ const handleAddRecord = async (e) => {
   setImageUrls(urls);
   const valRef = collection(firestore,'landlordData')
   addDoc(valRef,{LandLord:currentUser.uid, 
+    Email:currentUser.email,
     Name:name, 
     uid:user.uid,
     Price:price, 
@@ -211,7 +215,7 @@ const handleAddRecord = async (e) => {
     Barangay:barangay,
     CLass:cclass, 
     Message:inputFields,
-    Available:available,
+    Available:available2,
     LandlordName:userrName.Name,
   Link:urls,
      Rate1:0, 
@@ -219,10 +223,11 @@ const handleAddRecord = async (e) => {
      Rate3:0, 
      Rate4:0,
       Rate5:0 })
-      handleShow(false)
+      
  toast.success('Successfully Added !', 
  {position: toast.POSITION.TOP_CENTER})
  setTimeout(() =>2000);
+navigate('/landlord_home')
 
 };
 
@@ -252,7 +257,7 @@ setShow4(true)
 setName5(landlordData.Name)
 setPrice5(landlordData.Price)
 setLandMark(landlordData.Class)
-setSlot(landlordData.Available)
+setSlot(parseInt(landlordData.Available)-1)
 
 }
 const handleDelete =async(id)=>{  
@@ -304,7 +309,7 @@ const handleFinalUpdate =async()=>{
 const handleGet = async(Name)=>{
   setShow5(true)
   const collectionName = 'userBooking';
-      const querySnapshot = await firestore.collection(collectionName).where('DormName', '==',Name).get();
+      const querySnapshot = await firestore.collection(collectionName).where('DormName', '==',Name).where('Status','==','Accept').get();
 
       const pendingBookingData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -389,7 +394,7 @@ setShow6(true)
             </div>
             <div class="col-md-2">
               <label for="inputZip" class="form-label">Available Slot</label>
-              <input type="text" class="form-control" id="inputZip"value = {landlordData.Available} />
+              <input type="text" class="form-control" id="inputZip"value = {parseInt(landlordData.Available)-1} />
             </div>
         
          
@@ -463,7 +468,7 @@ setShow6(true)
             </div>
             <div class="col-md-2">
               <label for="inputZip" class="form-label">Available Slot</label>
-              <input type="text" class="form-control" id="inputZip"value ={Slot} onChange={(e) => setSlot(e.target.value)}/>
+              <input type="number" class="form-control" id="inputZip"value ={Slot} onChange={(e) => setSlot(e.target.value)}/>
             </div>
         
          
@@ -549,7 +554,9 @@ setShow6(true)
 
                    <td>
                    <a href="#" class="delete l "onClick={()=>handleProfile(users.uid)} title="Profile" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">person_pin</i></a>
-                 
+                   <Link to ={`/landlord_payment/${users.uid}`}>
+                   <a href="#" class="delete"title="Payment" data-toggle="tooltip" style={{color:"orange"}}> <i class="large material-icons">payment</i></a>
+                    </Link>
                      
                 </td>
                 </tr>
@@ -877,7 +884,7 @@ Close
 </div>  
 
 < ToastContainer />
-
+<Footer />
 </>
   )
 }

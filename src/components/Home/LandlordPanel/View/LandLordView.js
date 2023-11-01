@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import firebase from 'firebase/compat/app'
 import LandlordNavbar from '../Navbar/LandlordNavbar';
 import { firestore } from '../../../Database/Database';
+import Footer from '../../../Navbar/Footer';
 
 function LandLordView() {
 const {id} = useParams();
@@ -81,6 +82,7 @@ useEffect(() => {
  <script type='text/javascript'></script>
 
                             </body>
+                            <Footer />
 
 </>
    

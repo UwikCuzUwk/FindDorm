@@ -2,6 +2,7 @@ import React, {useEffect, useState}from 'react'
 import { Link } from 'react-router-dom';
 import LandlordNavbar from '../Navbar/LandlordNavbar'
 import firebase from 'firebase/compat/app'
+import Footer from '../../../Navbar/Footer';
 
 function LandlordHome() {
 const [item, setItem] = useState([]);
@@ -85,10 +86,17 @@ return () => unsubscribe();
               
                 )
               
-                })
-        
                 }
-                      <p>No Bookings</p>
+                )
+                }
+
+                  <div>
+  
+    </div>
+
+
+
+
 
      </div>
           
@@ -98,7 +106,7 @@ return () => unsubscribe();
         crossorigin="anonymous"></script>
 </body>
 
-
+<Footer />
 </>
   )
 }
