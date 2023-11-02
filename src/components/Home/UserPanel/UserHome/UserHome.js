@@ -218,13 +218,13 @@ const handleSearch=async()=>{
         onHide={handleClose2}
         backdrop="static"
         keyboard={false}  
-        dialogClassName="my-modal gray"
+        dialogClassName="my-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title>Result</Modal.Title>
         </Modal.Header>
             <Modal.Body>
-            <div class="row row-cols-1 row-cols-md-1 g-4 py-5 m-5 mt-0">
+            <div class="row row-cols-1 row-cols-md-0 g-2 py-5 m-3 mt-0">
         {searchResults.map((userss, index)=>{
                 return(
                   <div class="col">
