@@ -24,6 +24,9 @@ import UserDownload from './components/Home/UserPanel/UserDownload/UserDownload'
 import UserProfile from './components/Home/UserPanel/UserPage/UserProfile'
 import LandlordProfile from './components/Home/LandlordPanel/Profile/LandlordProfile'
 import ActiveRoom from './components/Home/UserPanel/ActiveDorm/ActiveRoom'
+import Alluser from './components/Home/AdminPanel/User/Alluser'
+import Report from './components/Home/AdminPanel/Report/Report'
+import LandLordReport from './components/Home/LandlordPanel/Report/LandLordReport'
 
 
 
@@ -54,6 +57,9 @@ function App() {
       <Route exact path = "/user_profile" element = {<ProtectedRoutes><UserProfile /></ProtectedRoutes>} /> 
       <Route exact path = "/landlord_profile" element = {<ProtectedRoutes><LandlordProfile /></ProtectedRoutes>} />
       <Route exact path = "/user_active" element = {<ProtectedRoutes><ActiveRoom /></ProtectedRoutes>} />
+      <Route exact path = "/admin_user" element = {<Alluser />} />
+      <Route exact path = "/admin_report" element = {<Report />} />
+      <Route exact path = "/landlord_report" element = {<ProtectedRoutes><LandLordReport /></ProtectedRoutes>} />
       
   </Routes>
   </AuthContextProvider>

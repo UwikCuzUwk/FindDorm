@@ -290,7 +290,7 @@ const handleReview=async()=>{
                 )
               
                 })}
-                <p>Loading</p>
+        
 
      </div>
           </div>

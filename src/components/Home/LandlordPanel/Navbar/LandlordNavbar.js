@@ -41,6 +41,7 @@ export default function LandlordNavbar() {
     <meta charset="utf-8" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
@@ -51,11 +52,12 @@ export default function LandlordNavbar() {
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a class="" href="/landlord_home">Home</a></li>
-        <li><a href="/landlord_add">Add </a></li>
-        <li><a href="/landlord_booked">Booked </a></li>
-        <li><a href="/landlord_profile">Profile </a></li>
-        <li><a  class = "backtohome" onClick = {handleLogout}>Logout</a></li>
+        <li><a class="" href="/landlord_home"> <i class="material-icons">home</i>Home</a></li>
+        <li><a href="/landlord_add">  <i class="material-icons">add</i>Add </a></li>
+        <li><a href="/landlord_booked"> <i class="material-icons">add_box</i>Inquired </a></li>
+        <li><a href="/landlord_profile"> <i class="material-icons">account_circle</i>Profile </a></li>
+        <li><a href="/landlord_report"> <i class="material-icons">feedback</i>Report </a></li>
+        <li><a  class = "backtohome" onClick = {handleLogout}> <i class="material-icons">arrow_back</i>Logout</a></li>
       </ul>
     </nav>
   </body>

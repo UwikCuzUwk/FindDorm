@@ -182,6 +182,7 @@ usersRef
     uid:userUID,
     Price:roomPrice,
     Balance:balance,
+    LandLord:currentUser.uid,
   })
   .then(() => {
    toast.success('Data added to Firestore successfully');

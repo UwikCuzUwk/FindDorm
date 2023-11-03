@@ -137,7 +137,7 @@ const handleEdit =()=>{
     </form>
   </div>    
   </div>  
-  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-center" style={{color:"green"}}><h2>Accepted Booked</h2></div>
+  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-center" style={{color:"green"}}><h2>Accepted Inquiry</h2></div>
 </div>  
 <div class="row">
     <div class="table-responsive " >
@@ -181,7 +181,7 @@ const handleEdit =()=>{
                 )
               
                 })}
-                 <td colSpan={7}>No Account </td>
+                 <td colSpan={7}>No Accepted Inquire </td>
 
 
 
@@ -207,7 +207,7 @@ const handleEdit =()=>{
     </form>
   </div>    
   </div>  
-  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-center" style={{color:"red"}}><h2>Pending Booked</h2></div>
+  <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-center" style={{color:"red"}}><h2>Pending Inquiry</h2></div>
 </div>  
 <div class="row">
     <div class="table-responsive " >
@@ -247,7 +247,7 @@ const handleEdit =()=>{
                 )
               
                 })}
-                 <td colSpan={7}>No Account </td>
+                 <td colSpan={7}>No Pending Inquiry </td>
 
 
 

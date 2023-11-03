@@ -47,10 +47,10 @@ export default function UserNavbar() {
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a class = "" href="/user_home">Home</a></li>
-        <li><a class = "" href="/user_booked">Booked</a></li>
-        <li><a class = "" href="/user_profile">Profile</a></li>
-        <li><a  class = "backtohome" onClick = {handleLogout}>Logout</a></li>
+        <li><a class = "" href="/user_home"><i class="material-icons">home</i>Home</a></li>
+        <li><a class = "" href="/user_booked"> <i class="material-icons">library_add</i>Inquired</a></li>
+        <li><a class = "" href="/user_profile"><i class="material-icons">account_circle</i>Profile</a></li>
+        <li><a  class = "backtohome" onClick = {handleLogout}><i class="material-icons">arrow_back</i>Logout</a></li>
       </ul>
     </nav>
   </body>

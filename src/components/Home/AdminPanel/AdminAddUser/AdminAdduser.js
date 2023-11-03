@@ -40,7 +40,7 @@ function AdminAdduser() {
   
     const fetchUser = async(e) =>{
         try{
-            const userDataCollection = await firestore.collection("userAdmin").get();
+            const userDataCollection = await firestore.collection("userAdmin").orderBy('Name').get();
             const userData = userDataCollection.docs.map((doc)=> doc.data());
             setUser(userData)
         }catch(error){

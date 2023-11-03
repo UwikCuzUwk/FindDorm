@@ -8,7 +8,7 @@
 .login_login-box{
     position: relative;
     width: 470px;
-    height: 580px;
+    height: 600px;
     padding:10px 30px;
     background: #FFF;
     border: 1px solid #ddd;
@@ -22,7 +22,7 @@
 .create_login-box{
     position: relative;
     width: 500px;
-    height: 980px;
+    height: 900px;
     padding:1px 30px;
     background: #FFF;
     border: 1px solid #ddd;
@@ -203,8 +203,10 @@ button{
     width: 100%;
     height: 50px;
     padding: 0 20px;
-    background: #FFF;
+    background: #2554C7;
     border: 1px solid #CCC;
+    border-radius: 10px;
+
 }
 .login_input-google img{
     width: 25px;
@@ -213,17 +215,21 @@ button{
     font-family: 'Poppins', sans-serif;
     font-size: 15px;
     width: 90%;
+    border-radius: 10px;
+    margin-bottom:1px;
+    color:white;
 }
 .login_input-twitter{
     justify-content: center;
     width: 70px;
     height: 50px;
-    background: #EEE;
+    background: #db881b;
     border: none;
 }
 .login_input-twitter img{
     width: 50px;
     height: 40px;
+    border-radius: 20px;
 }
 .login_input-google:hover,
 .login_input-twitter:hover,
@@ -309,7 +315,7 @@ button{
     .login_login-box{
         position: relative;
         width: 360px;
-        height: 550px;
+        height: 600px;
         padding:1px 30px;
         background: #FFF;
         border: 1px solid #ddd;
@@ -350,7 +356,7 @@ button{
     .create_login-box{
         position: relative;
         width: 360px;
-        height: 950px   ;
+        height: 860px   ;
         padding:1px 30px;
         border: 1px solid #ddd;
         border-radius: 10px;
@@ -365,7 +371,7 @@ button{
        margin-top:-10px;
     }
     .login_sign-up{
-      margin-bottom:-40px;  
+      margin-bottom:-20px;  
   }
   .login_input-google{
   align-items: center;
@@ -374,7 +380,11 @@ button{
 .login_input-twitter{
     border-radius: 15px;
 }
-   
+.login_or-text{
+   text-decoration: none;
+   margin-top:-10px;
+ 
+}
 }
 @media only screen and (min-width:481px) and (max-width: 768px){
     .login_login-box{

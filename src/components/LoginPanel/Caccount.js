@@ -56,6 +56,7 @@ function Caccount() {
             Address:address,
             Age:age,
             Gender:selectedValue,
+            Photo:"",
           })
 
           toast.success('Successfully Created account!', 
@@ -168,19 +169,6 @@ const handleGoogleSignUp = ()=>{
         {error && <div style={{ color: 'red' }}>{error}</div>}
         <div class="login_input-box">
             <input type="submit" class="login_input-submit" onClick = {handleCreateAccount} value="Create Account" />
-        </div>
-        <div class="login_middle-text">
-            <hr />
-            <p class="login_or-text">Or</p>
-        </div>
-        <div class="login_social-sign-in">
-            <button class="login_input-google" onClick={handleGoogleSignUp}>
-                 <img src={google} alt="" />
-                 <p>Sign Up with Google</p>
-            </button>
-            <button class="login_input-twitter">
-                <img src={logo} alt="" />
-            </button>
         </div>
         <div class="login_sign-up">
             <p>Already have account? <a href="/login_page">Back to Login</a></p>

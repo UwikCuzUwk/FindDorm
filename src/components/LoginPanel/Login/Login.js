@@ -25,7 +25,7 @@ const handleSignin = async() => {
   if(email ==="dormifind.admin@gmail.com" && password ==="dormifind.admin123"){
     toast.success('Successfully Log in!', 
     {position: toast.POSITION.TOP_CENTER})
-    setTimeout(() => navigate("/admin_home"), 2000);
+    setTimeout(() => navigate("/admin_report"), 2000);
    }
  else{
   try {
@@ -103,9 +103,9 @@ const handleSignin = async() => {
             <p class="login_or-text">Or</p>
         </div>
         <div class="login_social-sign-in">
-            <button class="login_input-google" onClick={handleGoogle} >
-                 <img src={google} alt="" />
-                 <p> <a>Sign In with Google</a></p>
+            <button class="login_input-google" onClick={handlelandlordlogin} >
+                 <img  alt="" />
+                 <p> <a>Log-in as LandLord</a></p>
             </button>
             <button class="login_input-twitter" onClick={handlelandlordlogin}>
                 <img src={logo} alt="" />

@@ -14,6 +14,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Footer from '../../../Navbar/Footer';
 
+
+
 export default function UserHome() {
   const navigate = useNavigate();
   const [show2, setShow2] = useState(false);
@@ -27,6 +29,8 @@ export default function UserHome() {
   const  [userItem, setUserItems] =useState([]);
   const [userItem1, setUserItems1] =useState('');
   const [userName, setUserName] =useState('');  
+
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
    
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -160,7 +164,6 @@ const handleSearch=async()=>{
  <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
@@ -179,6 +182,7 @@ const handleSearch=async()=>{
   </span>
 </div>
         <div class="row row-cols-1 row-cols-md-3 g-4 py-5">
+          
         {users.map((userss, index)=>{
                 return(
                   <div class="col">
@@ -204,7 +208,6 @@ const handleSearch=async()=>{
                 )
               
                 })}
-                <p>Loading</p>
 
      </div>
           
@@ -218,23 +221,22 @@ const handleSearch=async()=>{
         onHide={handleClose2}
         backdrop="static"
         keyboard={false}  
-        dialogClassName="my-modal"
+        dialogClassName="my-modal responsive"
       >
         <Modal.Header closeButton>
           <Modal.Title>Result</Modal.Title>
         </Modal.Header>
             <Modal.Body>
-            <div class="row row-cols-1 row-cols-md-0 g-2 py-5 m-3 mt-0">
+            <div class="row row-cols-1 row-cols-md-0 g-2 py-4 m-3 mt-1">
         {searchResults.map((userss, index)=>{
                 return(
-                  <div class="col">
+                  <div class="cols">
                   <div class="cards">
                       <img src={userss.Link} class="card-img-top" alt="..." />
                       <div class="card-bodys">
                           <h5 class="card-title">{userss.Name}
                     </h5>
                     <p class="card-text"><i class="material-icons">location_on</i>{userss.Location}</p>
-                          <p class="card-text">{userss.Message}</p>
                       </div>
                       <div class="mb-5 d-flex justify-content-around">
                           <h3>₱{userss.Price}</h3>
