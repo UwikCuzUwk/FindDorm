@@ -7,11 +7,10 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Link } from 'react-router-dom';
 
 import { ref, getDownloadURL, uploadBytesResumable, deleteObject   } from "firebase/storage";
-import { addDoc, collection, deleteDoc, getDocs, doc, put} from "firebase/firestore"; 
 import { auth, storage, firestore } from '../../../Database/Database';
 import Footer from '../../../Navbar/Footer';
 import bookimg from '../../../LoginPanel/Image/13027.jpg'
-import contact from '../../../LoginPanel/Image/cotact.avif'
+
 
 
 function UserProfile() {
@@ -213,8 +212,13 @@ const handleContact = async() =>{
 }
   return (
    <>
-   <UserNavbar />
+<UserNavbar />
    <br />
+   <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
    <section style={{color:"Orange"}}>
   <div class="container py-5">
     <div class="row">
