@@ -174,14 +174,14 @@ const handleRatingChange = (value) => {
 const handleReview=async()=>{
  handleShow3(true)
 }
- const handleComment =async()=>{
+ const handleComment =async(e)=>{
+  e.preventDefault();
 try {
   await firebase.firestore().collection('userComments').add({
     Comments: comment,
-    timestamp: new Date(),
     Name: userName20,
     Email: userEmail20,
-    uid:currentUser1.uid,
+    uid:currentUser1,
     LandlordID:userID,
     Photo:photo20,
   });
