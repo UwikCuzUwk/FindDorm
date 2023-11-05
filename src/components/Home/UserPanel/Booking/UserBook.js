@@ -97,7 +97,7 @@ const fetchUserItems = async (uid) => {
 
   }, []);
 
-  useEffect(() => {
+
     const currentUser = firebase.auth().currentUser;
 
     if (currentUser) {
@@ -121,31 +121,23 @@ const fetchUserItems = async (uid) => {
           console.error('Error fetching user data:', error);
         });
     }
-  }, []);
-  useEffect(() => {
-    // Reference to the Firestore collection
     const userBookingRef = firebase.firestore().collection('userBooking');
-
-    // Query the collection to find a document with matching UID
     userBookingRef
       .where('uid', '==', userID)
       .get()
       .then((querySnapshot) => {
         if (!querySnapshot.empty) {
-          // If a document is found, check the status
+      
           const bookingData = querySnapshot.docs[0].data();
           setBookingStatus(bookingData.Status);
         } else {
           // If no document is found, the user has not accepted
-          setBookingStatus('Not Accepted');
+          setBookingStatus('Not Accepted'); 
         }
       })
       .catch((error) => {
         console.error('Error getting booking data:', error);
       });
-  }, [userID]);
-
-
 
 
 const handleSubmit = async (e) => {
@@ -155,20 +147,7 @@ const handleSubmit = async (e) => {
     if(newAvailable === 0){
       toast.error("No Room Available")
     }else{
-      Swal.fire({
-        title: 'Do you want to Inquire?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        denyButtonText: 'No',
-        customClass: {
-          actions: 'my-actions',
-          cancelButton: 'order-1 right-gap',
-          confirmButton: 'order-2',
-          denyButton: 'order-3',
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
+   
           
           const db = firebase.firestore();
           const usersRef = db.collection('userBooking')
@@ -191,10 +170,6 @@ const handleSubmit = async (e) => {
     toast.success('Booking Request Sent Successfully')
           Swal.fire('Saved!', '', 'success')
           navigate("/user_home")
-        } else if (result.isDenied) {
-          Swal.fire('Inquire are not saved', '', 'info')
-        }
-      })
     }
   }else{
     toast.error("You have already accepted the booking")
@@ -209,6 +184,7 @@ const handleSubmit = async (e) => {
 
   return (
 <>
+<br />
 <UserNavbar />
 
 <head>
@@ -223,10 +199,10 @@ const handleSubmit = async (e) => {
       <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
         <h2 class="mb-4 display-5 text-center">Inquire Now</h2>
         <p class="text-secondary mb-5 text-center">The best way to Book is to use our contact form below. Please fill out all of the required fields and we will get back to you as soon as possible.</p>
-        <hr class="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle" />
       </div>
     </div>
   </div>
+
 
   <div class="container">
     <div class="row justify-content-lg-center">
@@ -237,6 +213,66 @@ const handleSubmit = async (e) => {
             <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
               <div class="col-12">
                 <div class="d-grid">
+                <h2 class="mb-4 display-5 text-center">Information</h2>
+                <div class="container mt-5">
+        <form class="row g-3">
+            <div class="col-md-6">
+              <label for="inputEmail4" class="form-label">Room Name</label>
+              <input type="text" class="form-control" id="inputAddress"style ={{color:"orange"}} value={userss.Name} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Price</label>
+              <input type="text" class="form-control" id="inputCity"style ={{color:"orange"}} value={userss.Price} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Owner Name</label>
+              <input type="text" class="form-control" id="inputCity"style ={{color:"orange"}} value={userss.LandlordName} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Address</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"orange"}} value={userss.Street + " "+userss.Barangay + " " + userss.Town + " " + userss.City} />
+            </div>
+          
+             
+  
+
+            <br />
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Name</label>
+              <input type="text" class="form-control" id="inputCity"style = {{color:"blue"}} value={userName} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Contact</label>
+              <input type="text" class="form-control" id="inputCity"style = {{color:"blue"}} value={userContact} />
+            </div>   
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">My Address</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {userAddress} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Gender</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {userGender} />
+            </div>
+              <div class="col-md-6">
+              <label for="inputCity" class="form-label">Age</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {userAge} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Email</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {userEmail} />
+            </div>
+          </form>
+          <hr />
+          <br />
+    </div>	
+         
+
+
+              
+              
+              
+      
+               
                   <button class="btn btn-primary btn-lg" type="submit" onClick={handleSubmit}>Inqure Now!</button>
                 </div>
               </div>

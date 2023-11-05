@@ -38,9 +38,7 @@ function AdminNavbar() {
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
@@ -51,12 +49,10 @@ function AdminNavbar() {
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a class="" href="/admin_add" >  <i class="material-icons">person_add</i>Add User</a></li>
-        <li><a class="" href="/admin_report"><i class="material-icons">home</i>Home</a></li>
-        <li><a href="/admin_user" class = ""><i class="material-icons">person</i>User</a></li>
-        <li><a  class = "backtohome " onClick = {handleLogout}> <i class="material-icons">arrow_back</i>Logout</a></li>
+        <li><a class="" href="/admin_add">Add User</a></li>
+        <li><a href="/">About Us</a></li>
+        <li><a  class = "backtohome" onClick = {handleLogout}>Logout</a></li>
       </ul>
-
     </nav>
   </body>
 </>

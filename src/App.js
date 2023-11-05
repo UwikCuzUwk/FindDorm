@@ -27,7 +27,8 @@ import ActiveRoom from './components/Home/UserPanel/ActiveDorm/ActiveRoom'
 import Alluser from './components/Home/AdminPanel/User/Alluser'
 import Report from './components/Home/AdminPanel/Report/Report'
 import LandLordReport from './components/Home/LandlordPanel/Report/LandLordReport'
-
+import HomeView from './components/LoginPanel/Home/HomeView'
+import HomeLocation from './components/LoginPanel/Home/Location'
 
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
   <Routes>
     <Route exact path = "/" element ={<Home />} />
     <Route exact path = "/login_page" element = {<Login />} />
+    <Route exact path = "/home_view/:id" element = {<HomeView />} />
+    <Route exact path = "/home_location/:id" element = {<HomeLocation />} />
       <Route exact path = "/signup_page" element = {<Caccount />} />
       <Route exact path = "/reset_password" element = {<Forgot /> } />
       <Route exact path = "/user_home" element = {<ProtectedRoutes><UserHome /></ProtectedRoutes>} />

@@ -1,16 +1,20 @@
 import React,{useEffect,useState} from 'react'
-import './UserView.css'
-import { auth, firestore, storage} from '../../../Database/Database';
-import firebase from 'firebase/compat/app'  
+import { firestore } from '../../Database/Database';
+import firebase from 'firebase/compat/app'
+import { addDoc, collection, deleteDoc, getDocs, doc, put, setIndexConfiguration} from "firebase/firestore"; 
 import { useParams, useNavigate } from 'react-router-dom';
-import UserNavbar from '../UserNavbar/UserNavbar';
 import { Link } from 'react-router-dom';
 import { Button,Modal,Input } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
-import Footer from '../../../Navbar/Footer';
+import Footer from '../../Navbar/Footer';
+import Navbar from '../../Navbar/Navbar';
+import Swal from 'sweetalert2';
+import '../../Home/UserPanel/UserHome/UserHome.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
-function UserView() {
+function HomeView() {
 
     const {id} = useParams();
     const [users, setCurrentUser]= useState('');
@@ -35,41 +39,14 @@ function UserView() {
     const [email, setEmaill] = useState('');
     const [aminity, setAminity] = useState([]);
     const [available, setAvailable] = useState('');
+    const [commentData, setCommentData] = useState([])
+    const [timestamp1, setTimeStamp] = useState('')
+    const [formatDate, setFormattedData] = useState('')
 
-    const[userName20, setUserName20] = useState('');
-    const[userEmail20, setUserEmail20] = useState('');
-    const[photo20, setPhoto20] = useState('');
-  const [commentData, setCommentData] = useState([])
-  const [timestamp1, setTimeStamp] = useState('')
-  const [formatDate, setFormattedData] = useState('')
-  const [currentUser1, setCurrentUID] = useState('');
-
-    const[comment, setComment] = useState('')
-    useEffect(() => {
-      const currentUser = firebase.auth().currentUser;
-      if (currentUser) {
-        setCurrentUID(currentUser.uid);
-        const userCollection = firebase.firestore().collection('user');
-        userCollection
-          .where('uid', '==', currentUser.uid)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              const userData = doc.data();
-              setUserName20(userData.Name);
-              setUserEmail20(userData.Email);
-              setPhoto20(userData.Photo);
-            });
-          })
-          .catch((error) => {
-            console.error('Error fetching user data:', error);
-          });
-      }
-    }, []);
     useEffect(() => {
       const fetchUserImages = async () => {
         try {
-          const userRef = firestore.collection('landlordData').doc(id); // Replace 'yourUserID' with the actual user ID
+          const userRef = firestore.collection('landlordData').doc(id); 
           const doc = await userRef.get();
   
           if (doc.exists) {
@@ -79,6 +56,7 @@ function UserView() {
             setUser(data)
             setAminity(data.Message|| [])
             setAvailable(data.Available || [])
+            console.log(data.uid)
           } else {
             console.log('No such document');
           }
@@ -86,7 +64,31 @@ function UserView() {
           console.error('Error fetching data from Firestore:', error);
         }
       };
+  
+      fetchUserImages();
+    }, []);
+   
+        const userCollection30 = firebase.firestore().collection('userAdmin');
+        userCollection30
+          .where('uid', '==', userID)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const userData = doc.data();
+              setUserName(userData.Name);
+              setContact(userData.Contact);
+              setAddress(userData.Address);
+              setEmaill(userData.Email);
+            
+            });
+          })
+          .catch((error) => {
+            console.error('Error fetching user data:', error);
+          });
+      
+  
       const userCollection = firebase.firestore().collection('userComments');
+
       userCollection
         .where('LandlordID', '==', userID)
         .get()
@@ -103,44 +105,14 @@ function UserView() {
         .catch((error) => {
           console.error('Error fetching user data: ', error);
         });
-        const userCollection3 = firebase.firestore().collection('userAdmin');
-        userCollection3
-          .where('uid', '==', userID)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              const userData = doc.data();
-              setUserName(userData.Name);
-              setContact(userData.Contact);
-              setAddress(userData.Address);
-              setEmaill(userData.Email);
-            
-            });
-          })
-          .catch((error) => {
-            console.error('Error fetching user data:', error);
-          });
-         
-
-      fetchUserImages();
-    }, [userID,id]);
-    
    
-    
-    
-    
-      
-      
-  
-  
-
   const available2 = parseInt(available)-1;
   
 const handleBooking =async()=>{
    navigate = ('/user_book')
 }
 const handleRate = ()=>{
-    setShow2(true);
+   toast.error("Logged in first before you rate!")
 }
 const handleRatingChange = (value) => {
     setRating(value);
@@ -174,30 +146,16 @@ const handleRatingChange = (value) => {
 const handleReview=async()=>{
  handleShow3(true)
 }
- const handleComment =async()=>{
-try {
-  await firebase.firestore().collection('userComments').add({
-    Comments: comment,
-    timestamp: new Date(),
-    Name: userName20,
-    Email: userEmail20,
-    uid:currentUser1.uid,
-    LandlordID:userID,
-    Photo:photo20,
-  });
 
-
-  setComment('');
-} catch (error) {
-  console.error('Error adding comment: ', error);
+const handleIquire = async () => {
+ toast.error('Logged in first before you Inquire!');
 }
 
- }
-
   return (
-<>
+<>< ToastContainer />
+
 <br />
-<UserNavbar />
+<Navbar />
 
 <head>
                                 <meta charset='utf-8' />
@@ -214,10 +172,10 @@ try {
                               <br />
                               <h1 class="text-center">{user.Name}</h1>
                             <div class="col-md text-right">
-                               <Link to = {`/user_booking/${id}`} >
-                        <button  class="btn btn-primary mb-4 mr-1">Inquire Now</button>
-                       </Link>
-                       <Link to = {`/user_location/${id}`} >
+                     
+                        <button  class="btn btn-primary mb-4 mr-1" onClick={handleIquire}>Inquire Now</button>
+                
+                       <Link to = {`/home_location/${id}`} >
                        <a class="btn btn-primary mb-4 mr-1" href="/user_location" >
                     Location
                 </a>
@@ -354,7 +312,7 @@ try {
                 )
               
                 })}
-                <p>Loading</p>
+        
 
      </div>
           </div>
@@ -416,10 +374,57 @@ try {
           </Button>
           
         </Modal.Footer>
-
       </Modal>
 
+      <Modal
+        show={show3}
+        onHide={handleClose3}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Rating</Modal.Title>
+        </Modal.Header>
+            <Modal.Body >
+  <form> 
+  {user && (
+    <>
+ <span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star"></span>
+<span class="fa fa-star"> = {user.Rate5}   <i class="material-icons">person</i></span>
+<br />
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star"> = {user.Rate4}  <i class="material-icons">person</i></span>
+<br />
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star"> = {user.Rate3}  <i class="material-icons">person</i></span>
+<br />
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star"> = {user.Rate2} <i class="material-icons">person</i></span>
+<br />
+<span class="fa fa-star"> = {user.Rate1} <i class="material-icons">person</i></span>
+    </>
+ 
+
+)}
+        </form>
     
+            </Modal.Body>
+ 
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose3}>
+            Close
+          </Button>
+          
+        </Modal.Footer>
+      </Modal>	
+
+
 
       <div className="container">
       <div className="row">
@@ -463,15 +468,7 @@ try {
       </div>
     </div>
   
-      <div class="bg-light p-2">
-                    <div class="d-flex flex-row align-items-start"><img class="rounded-circle" width="100" />
-                    <textarea class="form-control ml-1 shadow-none textarea"  value = {comment} required onChange = {(e) =>setComment(e.target.value) }></textarea>
-                    </div>
-                    <div class="mt-1 text-right">
-                      <button class="btn btn-primary btn-sm shadow-none" type="button" onClick={handleComment}>Post comment</button>
-                      <button class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="button">Cancel</button>
-                      </div>
-                </div>
+  
                 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
                 <div class="container">
                   <div class="row">
@@ -500,13 +497,9 @@ try {
     </div>
         </div>
     </div>
-
-
-
-
 <Footer />
 </>
   )
 }
 
-export default UserView
+export default HomeView

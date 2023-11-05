@@ -7,7 +7,6 @@ function Navbar() {
     <meta charset="utf-8" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
@@ -18,9 +17,9 @@ function Navbar() {
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a class="" href="/"><i class="material-icons">home</i>Home</a></li>
-        <li><a href="/login_page"> <i class="material-icons">login</i>Login</a></li>
-        <li><a href="/signup_page"> <i class="material-icons">contacts</i>Signup</a></li>
+        <li><a class="" href="/">Home</a></li>
+        <li><a href="/login_page">Login</a></li>
+        <li><a href="/signup_page">Signup</a></li>
         
       </ul>
     </nav>

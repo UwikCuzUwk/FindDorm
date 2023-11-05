@@ -61,7 +61,7 @@ function Caccount() {
 
           toast.success('Successfully Created account!', 
           {position: toast.POSITION.TOP_CENTER})
-          navigate('/')
+          navigate("/user_home")
 
     } catch (error) {
       if (error.code === 'auth/invalid-email') {

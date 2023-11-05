@@ -7,8 +7,6 @@ import { Button,Modal,Input } from 'react-bootstrap';
 import { useNavigate, Link} from 'react-router-dom';
 import { auth, firestore, storage} from '../../../Database/Database';
 import firebase from 'firebase/compat/app'
-import { ref, getDownloadURL, uploadBytesResumable, deleteObject   } from "firebase/storage";
-import { addDoc, collection, deleteDoc, getDocs, doc, put, query, where, or} from "firebase/firestore"; 
 import 'firebase/firestore'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
@@ -54,19 +52,17 @@ export default function UserHome() {
         console.error('Error fetching user items:', error);
       }
     };
-
-    const fetchUser = async(e) =>{
-    const itemsRef = firestore.collection('landlordData')
-
-    itemsRef.get().then((querySnapshot)=>{
-      const data = [];
-      querySnapshot.forEach((doc)=>{
-       data.push({id:doc.id, ...doc.data()});
-      })
-      setUser(data)
-    })
-
-  }
+    const fetchUser = async (e) => {
+      const itemsRef = firestore.collection('landlordData');
+      
+      try {
+        const querySnapshot = await itemsRef.orderBy('Price').get();
+        const data = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setUser(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
 const fetchUserItems = async (uid) => {
     try {
@@ -157,16 +153,14 @@ const handleSearch=async()=>{
 
   return (
  <>
-<br />
+
 <UserNavbar />
 <br />
  <head>
  <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+ 
 </head>
 <body>
     <div class="container">
@@ -195,9 +189,6 @@ const handleSearch=async()=>{
                       </div>
                       <div class="mb-5 d-flex justify-content-around">
                           <h3>₱{userss.Price}</h3>
-                          <Link to = {`/user_booking/${userss.id}`} >
-                        <button  class="btn btn-primary">Book Now</button>
-                       </Link>
                       </div>
                        <Link to = {`/user_view/${userss.id}`} >
                         <button class="btn btn-primary w-100">View</button>
@@ -213,8 +204,10 @@ const handleSearch=async()=>{
           
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
 </body>
 <Modal
         show={show2}
@@ -240,9 +233,6 @@ const handleSearch=async()=>{
                       </div>
                       <div class="mb-5 d-flex justify-content-around">
                           <h3>₱{userss.Price}</h3>
-                          <Link to = {`/user_booking/${userss.id}`} >
-                        <button  class="btn btn-primary">Book Now</button>
-                       </Link>
                       </div>
                        <Link to = {`/user_view/${userss.id}`} >
                         <button class="btn btn-primary w-100">Overview</button>
@@ -267,9 +257,10 @@ const handleSearch=async()=>{
           
         </Modal.Footer>
       </Modal>
-      
-
       < ToastContainer />
+
+
+
       <Footer />
  </>
   )
