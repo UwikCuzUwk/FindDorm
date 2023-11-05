@@ -61,7 +61,7 @@ function Caccount() {
 
           toast.success('Successfully Created account!', 
           {position: toast.POSITION.TOP_CENTER})
-          navigate("/user_home")
+          navigate("/")
 
     } catch (error) {
       if (error.code === 'auth/invalid-email') {
@@ -113,19 +113,19 @@ const handleGoogleSignUp = ()=>{
         </div>
         <div class="login_input-box ">
             <input type="text" class="login_input-field" id="email" autocomplete="off" value = {email} required onChange = {(e) =>setEmail(e.target.value) } />
-            <label for="password">Email or phone</label>
+            <label for="email">Email or phone</label>
         </div>
         <div class="login_input-box">
             <input type="text" class="login_input-field" id="name" autocomplete="off" value = {name} required onChange = {(e) =>setName(e.target.value) } />
-            <label for="text">Full Name</label>
+            <label for="name">Full Name</label>
         </div>
         <div class="login_input-box">
             <input type="number" class="login_input-field" id="contact" autocomplete="off" value = {contact} required onChange = {(e) =>setContact(e.target.value) } />
-            <label for="password">Contact No</label>
+            <label for="contact">Contact No</label>
         </div>
         <div class="login_input-box">
             <input type="text" class="login_input-field" id="address" autocomplete="off" value = {address} required onChange = {(e) =>setAddress(e.target.value) } />
-            <label for="password">Address</label>
+            <label for="address">Address</label>
         </div>
 
 
@@ -145,19 +145,11 @@ const handleGoogleSignUp = ()=>{
 
 <div class="login_input-box">
             <input type="number" class="login_input-field " id="age" autocomplete="off" value = {age} required onChange = {(e) =>setAge(e.target.value) } />
-            <label for="password">Age</label>
+            <label for="age">Age</label>
         </div>
-
-
-
-
-
-
-
-
         <div class="login_input-box">
             <input type="password" class="login_input-field" id="password1" autocomplete="off"  required onChange = {(e) => setPassword1(e.target.value) }/>
-            <label for="password">Password</label>
+            <label for="password1">Password</label>
         </div>
         <div class="login_input-box">
             <input type="password" class="login_input-field" id="password" autocomplete="off"  required onChange = {(e) => setPassword(e.target.value) }/>

@@ -229,7 +229,7 @@ const handleSearch=async()=>{
                       <div class="card-bodys">
                           <h5 class="card-title">{userss.Name}
                     </h5>
-                    <p class="card-text"><i class="material-icons">location_on</i>{userss.Location}</p>
+                    <p class="card-text"><i class="material-icons">location_on</i>{userss.Street + " " + userss.Barangay + " " + userss.Town + " " + userss.City}</p>
                       </div>
                       <div class="mb-5 d-flex justify-content-around">
                           <h3>₱{userss.Price}</h3>
