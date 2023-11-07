@@ -21,6 +21,7 @@ function Login() {
 
 const handleSignin = async() => { 
   setError(null);
+  const userCredential = await auth.signInWithEmailAndPassword(email, password);
 
   if(email ==="dormifind.admin@gmail.com" && password ==="dormifind.admin123"){
     toast.success('Successfully Log in!', 
@@ -28,26 +29,31 @@ const handleSignin = async() => {
     setTimeout(() => navigate("/admin_report"), 2000);
    }
  else{
-  try {
-    await firebase.auth().signInWithEmailAndPassword(email, password);  
-    toast.success('Successfully Log in!', 
-    {position: toast.POSITION.TOP_CENTER})
-    setTimeout(() => navigate("/user_home"), 2000);
-  } catch (error) {
-    console.error('Error signing in:', error.message);
-    if (error.code === 'auth/user-not-found') {
-      toast.error('User not found. Please check your email or sign up.', 
+  if (userCredential.user.emailVerified) {
+    try {
+      toast.success('Successfully Log in!', 
       {position: toast.POSITION.TOP_CENTER})
-    } else if (error.code === 'auth/wrong-password') {
-      toast.error('Wrong password. Please check your password and try again.', 
-      {position: toast.POSITION.TOP_CENTER})
-    } else if (error.code === 'auth/invalid-email') {
-      toast.error('Invalid email format. Please enter a valid email address.', 
-      {position: toast.POSITION.TOP_CENTER})
-    }else if(error.code ==='auth/invalid-login-credentials'){
-      toast.error('Invalid Credentials Please check your email and password', 
+      setTimeout(() => navigate("/user_home"), 2000);
+    } catch (error) {
+      console.error('Error signing in:', error.message);
+      if (error.code === 'auth/user-not-found') {
+        toast.error('User not found. Please check your email or sign up.', 
         {position: toast.POSITION.TOP_CENTER})
+      } else if (error.code === 'auth/wrong-password') {
+        toast.error('Wrong password. Please check your password and try again.', 
+        {position: toast.POSITION.TOP_CENTER})
+      } else if (error.code === 'auth/invalid-email') {
+        toast.error('Invalid email format. Please enter a valid email address.', 
+        {position: toast.POSITION.TOP_CENTER})
+      }else if(error.code ==='auth/invalid-login-credentials'){
+        toast.error('Invalid Credentials Please check your email and password', 
+          {position: toast.POSITION.TOP_CENTER})
+      }
     }
+
+  } else {
+    
+   toast.error('Email not verified. Please check your email and verify.');
   }
  }
 }

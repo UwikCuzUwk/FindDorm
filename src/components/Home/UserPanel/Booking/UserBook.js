@@ -29,7 +29,10 @@ const [userGender, setUserGender] = useState('')
 const [userID, setuserID] = useState('');
 const [bookingStatus, setBookingStatus] = useState(null);
 const [available, setAvailable] = useState('');
-
+const [street, setStreets] =useState('');
+const [city, setCity] =useState('');
+const [barangay, setBarangay] = useState('');
+const [town, setTown] = useState('')
 
 
   const itemRef = firestore.collection('landlordData').doc(id);
@@ -111,7 +114,10 @@ const fetchUserItems = async (uid) => {
             const userData = doc.data();
             setUserName(userData.Name);
             setUserEmail(userData.Email);
-            setUserAddress(userData.Address);
+            setStreets(userData.Street);
+            setBarangay(userData.Barangay);
+            setTown(userData.Town);
+            setCity(userData.City);
             setUserContact(userData.Contact)
             setUserAge(userData.Age)
             setUserGender(userData.Gender)
@@ -159,7 +165,10 @@ const handleSubmit = async (e) => {
             Gender:userGender,
             Contact:userContact,
             OwnerEmail:userss.Email,  
-            Address:userAddress,
+            Street:street,
+            Barangay:barangay,
+            Town:town,
+            City:city,
             Price:userss.Price,
             DormName:userss.Name,
             Owner:userss.LandlordName,
@@ -246,16 +255,24 @@ const handleSubmit = async (e) => {
               <input type="text" class="form-control" id="inputCity"style = {{color:"blue"}} value={userContact} />
             </div>   
             <div class="col-md-6">
-              <label for="inputCity" class="form-label">My Address</label>
-              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {userAddress} />
+              <label for="inputCity" class="form-label">Street</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {street} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Barangay</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {barangay} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Town</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {town} />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">City</label>
+              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {city} />
             </div>
             <div class="col-md-6">
               <label for="inputCity" class="form-label">Gender</label>
               <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {userGender} />
-            </div>
-              <div class="col-md-6">
-              <label for="inputCity" class="form-label">Age</label>
-              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {userAge} />
             </div>
             <div class="col-md-6">
               <label for="inputCity" class="form-label">Email</label>

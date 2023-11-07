@@ -114,7 +114,7 @@ useEffect(() => {
           querySnapshot.forEach((doc) => {
             const userData = doc.data();
             setUserName(userData.Name);
-            setAddress(userData.Address);
+            setAddress(userData.Street + " " + userData.Barangay + " " + userData.Town + " " + userData.City);
             setUserEmail(userData.Email);
             setContact(userData.Contact);
             setPhoto(userData.Photo);

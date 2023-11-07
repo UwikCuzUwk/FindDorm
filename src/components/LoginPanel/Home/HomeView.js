@@ -40,8 +40,8 @@ function HomeView() {
     const [aminity, setAminity] = useState([]);
     const [available, setAvailable] = useState('');
     const [commentData, setCommentData] = useState([])
-    const [timestamp1, setTimeStamp] = useState('')
-    const [formatDate, setFormattedData] = useState('')
+    const [dormName, setDormName] = useState('')
+    const [sameRoom, setsameRoom] = useState([])
 
     useEffect(() => {
       const fetchUserImages = async () => {
@@ -56,7 +56,8 @@ function HomeView() {
             setUser(data)
             setAminity(data.Message|| [])
             setAvailable(data.Available || [])
-            console.log(data.uid)
+           setDormName(data.Name)
+         
           } else {
             console.log('No such document');
           }
@@ -64,9 +65,10 @@ function HomeView() {
           console.error('Error fetching data from Firestore:', error);
         }
       };
-  
+
       fetchUserImages();
-    }, []);
+
+    }, [id]);
    
         const userCollection30 = firebase.firestore().collection('userAdmin');
         userCollection30
@@ -86,7 +88,24 @@ function HomeView() {
             console.error('Error fetching user data:', error);
           });
       
-  
+          useEffect(() => {
+         const db = firebase.firestore();
+            db.collection('userBooking')
+              .where('DormName', '==', dormName) 
+              .where('Status', '==', 'Accept')
+              .get()
+              .then((querySnapshot) => {
+                const retrievedData = [];
+                querySnapshot.forEach((doc) => {
+                  retrievedData.push({ id: doc.id, ...doc.data() });
+                });
+                setsameRoom(retrievedData);
+              })
+              .catch((error) => {
+                console.error('Error getting documents: ', error);
+              });
+          }, [dormName]);
+
       const userCollection = firebase.firestore().collection('userComments');
 
       userCollection
@@ -219,14 +238,14 @@ const handleIquire = async () => {
                         <div class="widget-49-meeting-info">
                         </div>
                     </div>
-                    {aminity.map((aminities, index)=>{
+                    {aminity.map((aminities)=>{
                       return(
                              <div>
         
   
                         <li class="widget-49-date-day"><span>{aminities}</span></li>
          
-          
+      
                               </div>
                       )
                     })}
@@ -278,7 +297,37 @@ const handleIquire = async () => {
         </div>
     </div>
 
+    <div class="col-lg-4">
+        <div class="card card-margin">
+            <div class="card-header no-border">
+                <h5 class="card-title">People in the Room</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="widget-49">
+                    <div class="widget-49-title-wrapper">
+                        <div class="widget-49-meeting-info">
+                            <span class="widget-49-pro-title"></span>
+                            <span class="widget-49-meeting-time"></span>
+                        </div>
+                    </div>
+                 
+                    {sameRoom.map((user) => (
+  <div key={user.id}>
+    <li className="widget-49-date-day">
+      <span>
+        <span style={{ color: "blue" }}>👤</span>
+        {" - "}
+        <span style={{ color: "black" }}>{user.Town + " " + user.City}</span>
+      </span>
+    </li>
+  </div>
+))}
 
+                 
+                </div>
+            </div>
+        </div>
+    </div>
 
     
 </div>
@@ -497,6 +546,8 @@ const handleIquire = async () => {
     </div>
         </div>
     </div>
+
+    
 <Footer />
 </>
   )

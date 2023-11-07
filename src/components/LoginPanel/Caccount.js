@@ -24,6 +24,11 @@ function Caccount() {
   const provider = new GoogleAuthProvider();
   const [selectedValue, setSelectedValue] = useState('');
   const [age, setAge] = useState('');
+  const [barangay, setBarangays] = useState('');
+  const [city, setCities] = useState(''); 
+  const [street, setStreets] = useState('');
+  const [town, setTowns] = useState('');
+
 
   const handleRadioChange =(event) =>{
     setSelectedValue(event.target.value);
@@ -37,31 +42,35 @@ function Caccount() {
 
   const handleCreateAccount = async () => {
   if(password ===password1){
-    if(!email.endsWith('@gmail.com')|| name ===''||contact.length<11||address ==='' || contact.length>11 || age.length>2)
+    if(!email.endsWith('@gmail.com')|| name ===''||contact.length<11|| contact.length>11 || age.length>2)
     {
       toast.error('Invalid Account make sure you check the email, contact, age and adress if correct!', 
       {position: toast.POSITION.TOP_CENTER})
   }else{
     try {
       setError(null);
-      const res = await createUserWithEmailAndPassword(auth, email, password)
+      const res = await auth.createUserWithEmailAndPassword(email, password)
           const user = res.user;  
+         user.sendEmailVerification();
 
-
-          await firestore.collection("user").add({
+           await firestore.collection("user").add({
             uid: user.uid,
             Email:user.email,
             Name: name,
             Contact:contact,
-            Address:address,
+            Barangay:barangay,
+            City:city,
+            Street:street,
+            Town:town,
             Age:age,
             Gender:selectedValue,
             Photo:"",
+            verified:false,
           })
 
-          toast.success('Successfully Created account!', 
+          toast.success('Successfully Created Account, Verified your email before Logging in !', 
           {position: toast.POSITION.TOP_CENTER})
-          navigate("/")
+          setTimeout(() => navigate("/"), 2000);
 
     } catch (error) {
       if (error.code === 'auth/invalid-email') {
@@ -83,16 +92,6 @@ function Caccount() {
     {position: toast.POSITION.TOP_CENTER})
   }
 }
-const handleGoogleSignUp = ()=>{
-  signInWithPopup(auth,provider).then((data)=>{
-    setValue(data.user.email)
-    localStorage.setItem("email",data.user.email)
-})
-}
-
-
-
-
   return (
 <>
 <LoginNavbar />
@@ -123,10 +122,7 @@ const handleGoogleSignUp = ()=>{
             <input type="number" class="login_input-field" id="contact" autocomplete="off" value = {contact} required onChange = {(e) =>setContact(e.target.value) } />
             <label for="contact">Contact No</label>
         </div>
-        <div class="login_input-box">
-            <input type="text" class="login_input-field" id="address" autocomplete="off" value = {address} required onChange = {(e) =>setAddress(e.target.value) } />
-            <label for="address">Address</label>
-        </div>
+     
 
 
         <div class="d-flex flex-row">
@@ -143,10 +139,25 @@ const handleGoogleSignUp = ()=>{
   </div>
 </div>
 
-<div class="login_input-box">
-            <input type="number" class="login_input-field " id="age" autocomplete="off" value = {age} required onChange = {(e) =>setAge(e.target.value) } />
-            <label for="age">Age</label>
-        </div>
+<div class="row g-3">
+            <div class="col-md-6"  >
+              <label for="inputEmail4" class="login_input-field">Street</label>
+              <input type="text" class="form-control" id="inputAddress"style ={{color:"orange"}} value = {street} onChange={(e)=> setStreets(e.target.value)}  />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity"class="login_input-field">Barangay</label>
+              <input type="text" class="form-control" id="inputCity"style ={{color:"orange"}} value = {barangay} onChange={(e)=> setBarangays(e.target.value)} />
+            </div>
+            <div class="col-md-6"  >
+              <label for="inputEmail4" class="login_input-field">Town</label>
+              <input type="text" class="form-control" id="inputAddress"style ={{color:"orange"}} value={town} onChange={(e)=> setTowns(e.target.value)} /> 
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity"class="login_input-field">City</label>
+              <input type="text" class="form-control" id="inputCity"style ={{color:"orange"}} value={city} onChange={(e)=> setCities(e.target.value)} />
+            </div>
+            </div>
+            <br />
         <div class="login_input-box">
             <input type="password" class="login_input-field" id="password1" autocomplete="off"  required onChange = {(e) => setPassword1(e.target.value) }/>
             <label for="password1">Password</label>

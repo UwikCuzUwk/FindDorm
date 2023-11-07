@@ -22,7 +22,7 @@
     .create_login-box{
         position: relative;
         width: 500px;
-        height: 900px;
+        height: 960px;
         padding:1px 30px;
         background: #FFF;
         border: 1px solid #ddd;
@@ -355,8 +355,8 @@
         }
         .create_login-box{
             position: relative;
-            width: 315px;
-            height: 860px   ;
+            width: 320px;
+            height: 145vh;
             padding:1px 30px;
             border: 1px solid #ddd;
             border-radius: 10px;
@@ -508,7 +508,7 @@
         .create_login-box{
             position: relative;
             width: 300px;
-            height: 900px;
+            height: 960px;
             padding:1px 30px;
             background: #FFF;
             border: 1px solid #ddd;
