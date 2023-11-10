@@ -244,6 +244,45 @@ const handleMyaddson = ()=>{
           Electric Kettle
         </label>
       </div>
+      <div className="form-check">
+        <input
+          className="form-check-input"
+          type="radio"
+          value="Electric Kettle"
+          id="checkboxElectricKettle"
+          checked={selectedItems.includes('Clip Fan')}
+          onChange={handleCheckboxChange}
+        />
+        <label className="form-check-label" htmlFor="checkboxElectricKettle">
+         Clip Fan
+        </label>
+      </div>
+      <div className="form-check">
+        <input
+          className="form-check-input"
+          type="radio"
+          value="Electric Kettle"
+          id="checkboxElectricKettle"
+          checked={selectedItems.includes('Flat Iron')}
+          onChange={handleCheckboxChange}
+        />
+        <label className="form-check-label" htmlFor="checkboxElectricKettle">
+     Flat Iron
+        </label>
+      </div>
+      <div className="form-check">
+        <input
+          className="form-check-input"
+          type="radio"
+          value="Electric Kettle"
+          id="checkboxElectricKettle"
+          checked={selectedItems.includes('Hair Blower')}
+          onChange={handleCheckboxChange}
+        />
+        <label className="form-check-label" htmlFor="checkboxElectricKettle">
+         Hair Blower
+        </label>
+      </div>
 
       <button class="btn btn-success mt-2"   onClick={handleSaveToFirestore}>Save</button>
     

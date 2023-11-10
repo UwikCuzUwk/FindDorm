@@ -58,9 +58,7 @@ function Caccount() {
             Email:user.email,
             Name: name,
             Contact:contact,
-            Barangay:barangay,
             City:city,
-            Street:street,
             Town:town,
             Age:age,
             Gender:selectedValue,
@@ -141,19 +139,11 @@ function Caccount() {
 
 <div class="row g-3">
             <div class="col-md-6"  >
-              <label for="inputEmail4" class="login_input-field">Street</label>
-              <input type="text" class="form-control" id="inputAddress"style ={{color:"orange"}} value = {street} onChange={(e)=> setStreets(e.target.value)}  />
-            </div>
-            <div class="col-md-6">
-              <label for="inputCity"class="login_input-field">Barangay</label>
-              <input type="text" class="form-control" id="inputCity"style ={{color:"orange"}} value = {barangay} onChange={(e)=> setBarangays(e.target.value)} />
-            </div>
-            <div class="col-md-6"  >
               <label for="inputEmail4" class="login_input-field">Town</label>
               <input type="text" class="form-control" id="inputAddress"style ={{color:"orange"}} value={town} onChange={(e)=> setTowns(e.target.value)} /> 
             </div>
             <div class="col-md-6">
-              <label for="inputCity"class="login_input-field">City</label>
+              <label for="inputCity"class="login_input-field">Province</label>
               <input type="text" class="form-control" id="inputCity"style ={{color:"orange"}} value={city} onChange={(e)=> setCities(e.target.value)} />
             </div>
             </div>
