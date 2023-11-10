@@ -65,16 +65,9 @@ function Alluser() {
                    <td>{users.Email}</td>
                   <td>{users.Contact}</td>
                   <td>{users.Gender}</td>
-                  <td>{users.Address}</td>
+                  <td>{users.Street + " " + users.Barangay + " " + users.Town + " " + users.City}</td>
                
           
-             
-
-                   <td>
-                 
-      
-                  
-                </td>
                 </tr>
                 
                 )

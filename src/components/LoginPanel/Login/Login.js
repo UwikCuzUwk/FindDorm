@@ -21,14 +21,13 @@ function Login() {
 
 const handleSignin = async() => { 
   setError(null);
-  const userCredential = await auth.signInWithEmailAndPassword(email, password);
-
   if(email ==="dormifind.admin@gmail.com" && password ==="dormifind.admin123"){
     toast.success('Successfully Log in!', 
     {position: toast.POSITION.TOP_CENTER})
     setTimeout(() => navigate("/admin_report"), 2000);
    }
  else{
+  const userCredential = await auth.signInWithEmailAndPassword(email, password);
   if (userCredential.user.emailVerified) {
     try {
       toast.success('Successfully Log in!', 
