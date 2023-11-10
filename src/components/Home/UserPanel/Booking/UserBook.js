@@ -77,14 +77,8 @@ const fetchUserItems = async (uid) => {
     try {
       const db = firebase.firestore();
       const itemsCollection = db.collection('landlordData');
-
-      // Query items collection where the 'uid' field is equal to the current user's UID
       const querySnapshot = await itemsCollection.where('uid', '==', uid).get();
-
-      // Extract data from the query snapshot
       const itemsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      
-      // Update the state with the user's items
      setUserItems(itemsData);
       console.log(itemsData)
     } catch (error) {
@@ -102,7 +96,6 @@ const fetchUserItems = async (uid) => {
 
 
     const currentUser = firebase.auth().currentUser;
-
     if (currentUser) {
       const userCollection = firebase.firestore().collection('user');
 

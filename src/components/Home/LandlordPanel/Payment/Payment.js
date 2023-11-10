@@ -38,13 +38,24 @@ const [cuurentBill ,setCurrentBill] = useState('')
 const [roomPrice,setRoomPrice] = useState('')
 const [balance, setBalance] = useState('')
 const [roomID, setRoomID] = useState('')
+const[currentMonth, setCurrentMonth] = useState('')
 
+const [data,setData] = useState([]);
+const [dormName, setDormName] = useState('')
+const [landlordID ,setLandlordData] = useState('')  
+const [messages, setMessages] = useState([])
+const [dormName1, setDormName1] = useState('')
+const [selectedValue, setSelectedValue] = useState('');
+const [adson, setUseAdsOn] = useState([])
+const [addPrice, setAddPrice] = useState('')
+const [additionalPrice, setAdditional]= useState('');
+const [totalPrice, setTotalPrice] = useState('')
 
 useEffect(() => {
    
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        setCurrentUser(user);
+        setCurrentUser(user.uid);
         fetchUserItems(user.uid);
         setCurrentId(user.uid)
         
@@ -59,6 +70,7 @@ useEffect(() => {
           const userDataCollection = await firestore.collection("landlordData").get();
           const userData = userDataCollection.docs.map((doc)=> doc.data());
           setUser(userData)
+          setDormName(userData.Name)
       }catch(error){
           console.error("Error fetching user", error.message);
       }
@@ -74,13 +86,15 @@ const fetchUserItems = async (uid) => {
 
       const userDataArray = querySnapshot.docs.map((doc) => {
         const data = doc.data();
-        const { Name,  Month, Status, NextBilling } = data;
+        setLandlordData(data.Landlord)
+        setDormName1(data.DormName)
+        const { Name,  Month, Status, NextBilling,currentMonth} = data;
         const date = new Date(Month.seconds * 1000); 
         const formattedTimestamp = date.toLocaleString();
         const date1 = new Date(NextBilling.seconds * 1000); 
-        const formattedTimestamp1 = date1.toLocaleString();
-        
-        return { id: doc.id, Name, Month: formattedTimestamp, Status, NextBilling:formattedTimestamp1};
+        const formattedTimestamp1 = date1.toLocaleString(); 
+    
+        return { id: doc.id, Name, Month: formattedTimestamp, Status, NextBilling:formattedTimestamp1, currentMonth};
       });
 
       setUserItems(userDataArray);
@@ -89,15 +103,54 @@ const fetchUserItems = async (uid) => {
       console.error('Error fetching user items:', error);
     }
   };
+  const fetchMessages = async () => {
+    try {
+      const userRef = firebase.firestore().collection('landlordData').where('uid','==',landlordID).where('Name','==',dormName1)
+      const doc = await userRef.get();
 
+      if (doc.exists) {
+        const data = doc.data();
+         setMessages(data.Message || []);
+     
+      } else {
+        console.log('No such document');
+      }
+    } catch (error) {
+      console.error('Error fetching data from Firestore:', error);
+    }
+  };
 
+  const fetchAddson = async () => {
+    try {
+      const db = firebase.firestore();
+      const userAddson = await db.collection('userAddson').where('uid', '==', id).where('Landlord', '==', currentUser).get();
+      const userAddsonData = userAddson.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          selectedItems: data.SelectedItems || [],
+          // Add other properties as needed
+        };
+      });
+  
+      // Assuming you want to set the SelectedItems in the usr state
+      const selectedItems = userAddsonData.flatMap((item) => item.selectedItems);
+      setUseAdsOn(selectedItems || []);
+  
+      console.log(userAddsonData);
+    } catch (error) {
+      console.error("Error fetching userAddson data", error.message);
+    }
+  };
+  fetchAddson();
+  fetchMessages();
   fetchUser();
 fetchUserItems();
 
 
   return () => unsubscribe();
 
-  }, []);
+  }, [dormName1,landlordID]);
 
 
 
@@ -122,6 +175,8 @@ fetchUserItems();
      setUserRoom(data.DormName)
      setuserUID(data.uid)
      setUserName(data.Name)
+     setCurrentMonth(data.currentMonth)
+
           return {
             id: doc.id,
             Name: data.Name,
@@ -131,7 +186,9 @@ fetchUserItems();
             DormName: data.DormName,
             PreviousBill: data.PreviousBill,
             Price:data.Price,
-            Balance:data.Balance,
+            Balance:data.Balance, 
+            Additional:data.Additional,
+            totalPrice:data.totalPrice,
           };
         });
 
@@ -148,12 +205,21 @@ fetchUserItems();
   }, [id]);
   
 
+
+
+  const handleChange = (e) => {
+    setSelectedValue(e.target.value);
+ };
+
+const userInput = 1;
+const seletedValue = data[userInput - 1];
+console.log(seletedValue);
   
 
 const handleAdddata = async(nextBillingDate,Status, Price)=>{
   setCurrentBill(nextBillingDate)
   setRoomPrice(Price)
-  if(Status ==='Paid' || Status ==='Settled'){
+  if(Status ==='Paid'){
     setShow1(true)
   }else{
     toast.error("Update the payment status first")
@@ -162,9 +228,12 @@ const handleAdddata = async(nextBillingDate,Status, Price)=>{
 }
 const handleAdd = async(e)=>{
   e.preventDefault();
-
-
-const monthTimestamp = new Date(month); // Convert the user input month to a JavaScript Date object
+  const totalPrice = parseInt(addPrice) + parseInt(roomPrice);
+  const currentMonth1 = new Date().getMonth() + 1;
+  if(currentMonth === currentMonth1){
+  toast.error("The User Already paid for this month")
+  }else{
+    const monthTimestamp = new Date(month); // Convert the user input month to a JavaScript Date object
 monthTimestamp.setDate(monthTimestamp.getDate() + 30);
 
 
@@ -181,16 +250,22 @@ usersRef
     Status:'Not Paid',
     uid:userUID,
     Price:roomPrice,
-    Balance:balance,
-    LandLord:currentUser.uid,
+    LandLord:currentUser,
+    totalPrice:totalPrice,
+    Additional:addPrice,
+    currentMonth: currentMonth,
   })
   .then(() => {
    toast.success('Data added to Firestore successfully');
-   navigate('/landlord_home')
+   
   })
   .catch((error) => {
     console.error('Error adding data to Firestore:', error);
   });
+
+  }
+
+
 
 }
 const handlePaid =async(id, Status)=>{
@@ -286,15 +361,18 @@ const handleBalance = async(e)=>{
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 <div className="crud shadow-lg p-3 mb-5 mt-5 bg-body rounded"> 
+
 <div class="row ">
 
 <div class="col-sm-3 mt-5 mb-4 text-gred">
   <div className="search">
     <form class="form-inline">
-    
+  
+
     </form>
   </div>    
   </div>  
+
   <div class="col-sm-3 offset-sm-2 mt-5 mb-4 text-gred" style={{color:"green"}}><h2>Monthly Payment</h2></div>     
 </div>  
 <div class="row">
@@ -309,7 +387,8 @@ const handleBalance = async(e)=>{
                 <th>Next Billing </th>
                 <th>Room Name </th>
                 <th>Price </th>
-                <th>Balance </th>
+                <th>AdsOn Price </th>
+                <th>Total</th>
                 <th>Status </th>
                 <th>Actions</th>
             </tr>
@@ -324,7 +403,8 @@ const handleBalance = async(e)=>{
                     <td style = {{color:'red'}}>{user.nextBillingDate}</td>
                     <td>{user.DormName}</td>
                     <td>{user.Price}</td>
-                    <td>{user.Balance}</td>
+                    <td>{user.Additional}</td>
+                    <td>{user.totalPrice}</td>
                     <td>{user.Status}</td>
           
              
@@ -333,7 +413,6 @@ const handleBalance = async(e)=>{
                    <a href="#" class="add" onClick={()=>handleDelete(user.id)} title="Delete" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">delete_forever</i></a>
                    <a href="#" class="add" onClick={()=>handleAdddata(user.nextBillingDate, user.Status, user.Price)} title="Add Billing" data-toggle="tooltip" style={{color:"orange"}}><i class="material-icons">create_new_folder</i></a>
                    <a href="#" class="delete" onClick={()=>handlePaid(user.id, user.Status)} title="Payment" data-toggle="tooltip" style={{color:"orange"}}><i class="material-icons">attach_money</i></a>
-                   <a href="#" class="settled" onClick={()=>handleSettled(user.id, user.Status,user.Price)} title="Pending" data-toggle="tooltip" style={{color:"blue"}}><i class="material-icons">note_add</i></a>
                 </td>
                 </tr>
                 
@@ -378,7 +457,20 @@ const handleBalance = async(e)=>{
                 <div class="form-group mt-3">
                     <input type="date" class="form-control" id="month" aria-describedby="emailHelp" placeholder="Month" value = {month} onChange={(e) => setMonth(e.target.value)}/>
                 </div>
-               
+        <br />
+                <label>Additional Gadget/Appliances</label>
+      {adson.map((user)=>{
+        return(
+          <div>
+             <div class="form-group mt-3">
+                    <input type="text" class="form-control" id="month" aria-describedby="emailHelp" placeholder="Month" value = {user}  />
+                </div>
+          </div>
+        )
+      })}
+      <div class="form-group mt-3">
+                    <input type="text" class="form-control" id="month" aria-describedby="emailHelp" placeholder="Month" value = {addPrice} onChange={(e)=>setAddPrice(e.target.value)}/>
+                </div>
                 
                   <button type="submit" class="btn btn-success mt-4" onClick={handleAdd}>Add Billing</button>
                 </form>

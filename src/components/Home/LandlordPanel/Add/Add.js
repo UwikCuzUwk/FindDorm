@@ -58,6 +58,7 @@ function Add() {
     const [name1, setName1] = useState('');
     const [barangay, setBarangay] = useState('');
     const [inputFields, setInputFields] = useState(['']);
+    const [prices, setPrices] = useState(['']);
     const [show3, setShow3] = useState(false);
     const [show4, setShow4] = useState(false);
     const [view, setView] = useState([]);
@@ -169,16 +170,26 @@ function Add() {
 
       const available3 = parseInt(available2) - 1;
 
+      const removeInputField = (index) => {
+        const newInputFields = [...inputFields];
+        newInputFields.splice(index, 1);
+        setInputFields(newInputFields);
+    
+        const newPrices = [...prices];
+        newPrices.splice(index, 1);
+        setPrices(newPrices);
+      };
 
-
-  const handleInputChange = (index, event) => {
-          const newInputFields = [...inputFields];
-          newInputFields[index] = event.target.value;
-          setInputFields(newInputFields);
-  };
+      const handleInputChange = (index, event) => {
+        const newInputFields = [...inputFields];
+        newInputFields[index] = event.target.value;
+        setInputFields(newInputFields);
+      };
+    
 
   const handleAddField = () => {
-          setInputFields([...inputFields, '']);
+    setInputFields([...inputFields, '']);
+ 
         };
       const handleImageChange = (event) => {
         const newImages = event.target.files;
@@ -753,15 +764,23 @@ dialogClassName="modal-lg"
         <input type="text" class="form-control" id="contact" aria-describedby="emailHelp" placeholder=" Space Available " value = {available} onChange={(e) => setAvailable(e.target.value)} />
     </div>
     {inputFields.map((field, index) => (
-     <div class="col-12">
-     <label for="message" class="form-label">Amenities<span class="text-danger">*</span></label>
-     <textarea class="form-control" id="message" name="message" rows="1" required key={index}
-            type="text"
-            value={field}
-            onChange={(event) => handleInputChange(index, event)}></textarea>
-   </div>
-
-        ))}
+        <div key={index} className="row g-3">
+          <div className="col-md-6">
+            <label htmlFor={`amenity${index}`} className="form-label">
+              Amenity <span className="text-danger">*</span>
+            </label>
+            <textarea
+              className="form-control"
+              id={`amenity${index}`}
+              name={`amenity${index}`}
+              rows="1"
+              required
+              value={field}
+              onChange={(event) => handleInputChange(index, event)}
+            ></textarea>
+          </div>
+        </div>
+      ))}
           <button class="btn btn-success mt-2" onClick={handleAddField}>Add Field</button>
     
     <div class="mb-3">

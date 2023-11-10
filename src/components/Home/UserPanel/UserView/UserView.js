@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { Button,Modal,Input } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
 import Footer from '../../../Navbar/Footer';
-
+import { PieChart } from '@mui/x-charts/PieChart';
 
 function UserView() {
 
@@ -43,8 +43,11 @@ function UserView() {
   const [timestamp1, setTimeStamp] = useState('')
   const [formatDate, setFormattedData] = useState('')
   const [currentUser1, setCurrentUID] = useState('');
-
+  const [locations, setLocations] = useState([]);
     const[comment, setComment] = useState('')
+
+
+
     useEffect(() => {
       const currentUser = firebase.auth().currentUser;
       if (currentUser) {
@@ -66,6 +69,7 @@ function UserView() {
           });
       }
     }, []);
+
     useEffect(() => {
       const fetchUserImages = async () => {
         try {
@@ -79,6 +83,7 @@ function UserView() {
             setUser(data)
             setAminity(data.Message|| [])
             setAvailable(data.Available || [])
+            fetchData(data.uid)
           } else {
             console.log('No such document');
           }
@@ -120,16 +125,58 @@ function UserView() {
           .catch((error) => {
             console.error('Error fetching user data:', error);
           });
-         
 
+          const fetchData = async (uid) => {
+            try {
+                 const querySnapshot = await firebase.firestore()
+                .collection('userBooking')
+                .where('LandLord', '==', uid)
+                .where('Status', '==', 'Accept')
+            
+                .get(); 
+      
+              const locationCounts = {};
+      
+              querySnapshot.forEach((doc) => {
+                const location = doc.data().Town;
+      
+    
+                if (location in locationCounts) {
+                  locationCounts[location]++;
+                } else {
+                  locationCounts[location] = 1;
+                }
+              });
+      
+              // Convert the locationCounts object to an array of objects
+              const locationsArray = Object.entries(locationCounts).map(([Town, count]) => ({
+                Town,
+                count,
+              }));
+      
+              setLocations(locationsArray);
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
+          }
       fetchUserImages();
+fetchData();
+
     }, [userID,id]);
     
-   
+    
+
+
+
     
     
     
-      
+    const pieChartData = locations.map((locationData) => ({
+      id: locationData.Town,
+      value: locationData.count,
+      label: locationData.Town,
+    }));
+
       
   
   
@@ -320,6 +367,34 @@ try {
         </div>
     </div>
 
+    <div class="col-lg-5">
+        <div class="card card-margin">
+            <div class="card-header no-border">
+                <h5 class="card-title">People in the Room</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="widget-49">
+                    <div class="widget-49-title-wrapper">
+                        <div class="widget-49-meeting-info">
+                            <span class="widget-49-pro-title"></span>
+                            <span class="widget-49-meeting-time"></span>
+                        </div>
+                    </div>
+                 
+                    <PieChart
+  series={[
+    {
+      data: pieChartData,
+    },
+  ]}
+  width={400}
+  height={200}
+/>
+                 
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     

@@ -211,6 +211,8 @@ const fetchUserItems = async (uid) => {
           CurrentDate: timestamp,
           uid:userID,
           Price:price,
+          totalPrice:0,
+          Additional:0,
         });
 
 

@@ -189,9 +189,9 @@ const fetchUserItems = async (uid) => {
         <Modal.Header closeButton>
           <Modal.Title>Result</Modal.Title>
         </Modal.Header>
-            <Modal.Body>
+            <Modal.Body> 
             <div class="row row-cols-1 row-cols-md-0 g-2 py-4 m-3 mt-1">
-        {searchResults.map((userss, index)=>{
+        {searchResults.map((userss)=>{
                 return(
                   <div class="cols">
                   <div class="cards">

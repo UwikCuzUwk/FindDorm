@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 import '../../Home/UserPanel/UserHome/UserHome.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { PieChart } from '@mui/x-charts/PieChart';
 
 function HomeView() {
 
@@ -42,7 +42,9 @@ function HomeView() {
     const [commentData, setCommentData] = useState([])
     const [dormName, setDormName] = useState('')
     const [sameRoom, setsameRoom] = useState([])
+    const [locations, setLocations] = useState([]);
 
+    const [userBookings, setUserBookings] = useState([]);
     useEffect(() => {
       const fetchUserImages = async () => {
         try {
@@ -57,6 +59,7 @@ function HomeView() {
             setAminity(data.Message|| [])
             setAvailable(data.Available || [])
            setDormName(data.Name)
+           fetchData(data.uid)
          
           } else {
             console.log('No such document');
@@ -65,11 +68,42 @@ function HomeView() {
           console.error('Error fetching data from Firestore:', error);
         }
       };
+      const fetchData = async (uid) => {
+        try {
+             const querySnapshot = await firebase.firestore()
+            .collection('userBooking')
+            .where('LandLord', '==', uid)
+            .where('Status', '==', 'Accept')
+        
+            .get(); 
+  
+          const locationCounts = {};
+  
+          querySnapshot.forEach((doc) => {
+            const location = doc.data().Town;
+  
 
+            if (location in locationCounts) {
+              locationCounts[location]++;
+            } else {
+              locationCounts[location] = 1;
+            }
+          });
+  
+          // Convert the locationCounts object to an array of objects
+          const locationsArray = Object.entries(locationCounts).map(([Town, count]) => ({
+            Town,
+            count,
+          }));
+  
+          setLocations(locationsArray);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
       fetchUserImages();
-
+      fetchData();
     }, [id]);
-   
         const userCollection30 = firebase.firestore().collection('userAdmin');
         userCollection30
           .where('uid', '==', userID)
@@ -88,23 +122,25 @@ function HomeView() {
             console.error('Error fetching user data:', error);
           });
       
-          useEffect(() => {
-         const db = firebase.firestore();
-            db.collection('userBooking')
-              .where('DormName', '==', dormName) 
-              .where('Status', '==', 'Accept')
-              .get()
-              .then((querySnapshot) => {
-                const retrievedData = [];
-                querySnapshot.forEach((doc) => {
-                  retrievedData.push({ id: doc.id, ...doc.data() });
-                });
-                setsameRoom(retrievedData);
-              })
-              .catch((error) => {
-                console.error('Error getting documents: ', error);
-              });
-          }, [dormName]);
+      
+
+
+
+
+
+
+
+
+
+
+
+          const pieChartData = locations.map((locationData) => ({
+            id: locationData.Town,
+            value: locationData.count,
+            label: locationData.Town,
+          }));
+
+
 
       const userCollection = firebase.firestore().collection('userComments');
 
@@ -311,17 +347,16 @@ const handleIquire = async () => {
                         </div>
                     </div>
                  
-                    {sameRoom.map((user) => (
-  <div key={user.id}>
-    <li className="widget-49-date-day">
-      <span>
-        <span style={{ color: "blue" }}>👤</span>
-        {" - "}
-        <span style={{ color: "black" }}>{user.Town + " " + user.City}</span>
-      </span>
-    </li>
-  </div>
-))}
+
+<PieChart
+  series={[
+    {
+      data: pieChartData,
+    },
+  ]}
+  width={300}
+  height={180}
+/>
 
                  
                 </div>

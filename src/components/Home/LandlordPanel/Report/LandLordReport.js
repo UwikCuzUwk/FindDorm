@@ -34,29 +34,25 @@ const [totalPrice, setTotalPrice] = useState(0);
     , []);
   
 
-      useEffect(() => {
-        const db = firebase.firestore();
-        const userPaymentRef = db.collection('userPayment');
-    
-        const fetchData = async () => {
-          try {
-            const querySnapshot = await userPaymentRef.where('Landlord', '==', uid).where('Status','==','Paid').get();
-            
-            let totalPrice = "";
-    
-            querySnapshot.forEach((doc) => {
-              const data = doc.data();
-              totalPrice += data.Price;
-            });
-    
-            setTotalPrice(totalPrice);
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-        };
-    
-        fetchData();
-      }, [uid]);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const querySnapshot = await firestore.collection('userPayment').where('Landlord', '==', uid).where('Status', '==', 'Paid').get();
+          let total = 0;
+  
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            total += parseInt(data.Price)
+          });
+  
+          setTotalPrice(total);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
 
 

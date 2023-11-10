@@ -5,9 +5,10 @@ import {firestore} from '../../../Database/Database'
 import firebase from 'firebase/compat/app'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
-import { deleteDoc, doc } from 'firebase/firestore';
+import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import Footer from '../../../Navbar/Footer';
+import { hi, id } from 'date-fns/locale';
 
 function Booked() {
   const [userItem, setUserItems]= useState([]);
@@ -16,16 +17,21 @@ function Booked() {
   const [accept, setAcceptedBooking] = useState([]);
   const [pending, setPendingBooking] = useState([]);
   const [uidstorer, setUid] = useState('');
+  const [dormName, setDormName] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState([]);
+  const [available, setAvailable] = useState('')
+
 
 
   useEffect(() => {
    
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        setCurrentUser(user);
+        setCurrentUser(user.uid);
         fetchUserItems(user.uid);
         getData(user.uid);
         getData1(user.uid)
+        getPayment(user.uid)
       } else {
         setCurrentUser(null);
       }
@@ -36,30 +42,33 @@ function Booked() {
           const userDataCollection = await firestore.collection("landlordData").get();
           const userData = userDataCollection.docs.map((doc)=> doc.data());
           setUser(userData)
+
       }catch(error){
           console.error("Error fetching user", error.message);
       }
 
   }
 
-const fetchUserItems = async (uid) => {
+  const fetchUserItems = async (uid) => {
     try {
       const db = firebase.firestore();
       const itemsCollection = db.collection('userBooking');
-
-      // Query items collection where the 'uid' field is equal to the current user's UID
       const querySnapshot = await itemsCollection.where('uid', '==', uid).get();
-
-      // Extract data from the query snapshot
       const itemsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      
-      // Update the state with the user's items
-      setUserItems(itemsData);
-     
+  
+      if (itemsData.length > 0) {
+        const firstItem = itemsData[0];
+        setDormName(firstItem.DormName);
+        setUserItems(itemsData);
+      } else {
+   
+      }
+  
     } catch (error) {
       console.error('Error fetching user items:', error);
     }
   };
+  
   
   const getData = async(uid)=>{
     try {
@@ -93,18 +102,46 @@ const fetchUserItems = async (uid) => {
       console.error('Error fetching pending bookings: ', error);
     }
   }
+  const getPayment = async (uid) => {
+    try {
+      const collectionName = 'userPayment';
+      const querySnapshot = await firebase.firestore().collection(collectionName).where('uid', '==', uid).where('DormName', '==', dormName).get();
+      const data = querySnapshot.docs.map((doc) => doc.data());
+      console.log('Fetched payment data:', data);
+  
+      if (data.length === 0) {
+        setPaymentStatus('No payments found');
+        return;
+      }
+      const anyPaid = data.some((payment) => payment.Status === 'Paid');
+  
+      if (anyPaid) {
+        setPaymentStatus('Paid');
+      } else {
+        setPaymentStatus('All payments are pending.');
+      }
+    } catch (error) {
+      console.error('Error fetching payment status:', error);
+      setPaymentStatus('Error fetching payment status');
+    }
+  };
+  
+  
+
+  getPayment();
   fetchUserItems();
   fetchUser();
   getData();
+
   getData1();
   return () => unsubscribe();
  
 
 
 
-  }, []);
+  }, [dormName]);
 
-
+  const trueAvailbale = available -1;
   const handleDelete =async(id)=>{
     try{
       const deleteVal =  doc(firestore,"userBooking",id)
@@ -116,8 +153,62 @@ const fetchUserItems = async (uid) => {
       {position: toast.POSITION.TOP_CENTER})
      }
   }
-const handleEdit =()=>{
+const handleLeave =async(DormName, uid)=>{
+  const currentUser = firebase.auth().currentUser;
+  const userBookingCollection = 'userBooking';
+  const landlordDataCollection = 'landlordData';
+ if(paymentStatus==='Paid'){
+  try {
+  
+    const userBookingQuerySnapshot = await firebase.firestore().collection(userBookingCollection)
+      .where('uid', '==', currentUser.uid)
+      .where('DormName', '==', dormName)
+      .get();
 
+    if (userBookingQuerySnapshot.empty) {
+      console.log('No matching documents found in userBooking.');
+      return;
+    }
+
+    const userBookingUpdatePromises = userBookingQuerySnapshot.docs.map((doc) => {
+      const docRef = firebase.firestore().collection(userBookingCollection).doc(doc.id);
+      return docRef.update({ Status: 'Pending' });
+    });
+
+    await Promise.all(userBookingUpdatePromises);
+
+    console.log('Status updated to Pending in userBooking successfully.');
+
+    // Update 'Available' field in landlordData collection
+    const landlordDataQuerySnapshot = await firebase.firestore().collection(landlordDataCollection)
+      .where('Name', '==', dormName)
+      .get();
+
+    if (landlordDataQuerySnapshot.empty) {
+      console.log('No matching documents found in landlordData.');
+      return;
+    }
+
+    const landlordDataUpdatePromises = landlordDataQuerySnapshot.docs.map((doc) => {
+      const docRef = firebase.firestore().collection(landlordDataCollection).doc(doc.id);
+      const currentAvailable = doc.data().Available || 0;
+      const updatedAvailable = currentAvailable + 1;
+      return docRef.update({ Available: updatedAvailable });
+    });
+
+    await Promise.all(landlordDataUpdatePromises);
+
+   toast.success('Available value updated successfully.');
+  } catch (error) {
+    console.error('Error updating status:', error);
+  }
+  
+  
+ }else{
+toast.error('Settled first your Payment before leaving!')
+ }
+
+ 
 }
 
 
@@ -175,6 +266,8 @@ const handleEdit =()=>{
                    
                    <a href="#" class="delete"title="View Payment" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">payment</i></a>
                 </Link>
+                <a href="#" class="leave"onClick={()=>handleLeave(users.DormName, users.uid)} title="Leave" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">cancel</i></a>
+                
                 </td>
                 </tr>
                 
@@ -240,7 +333,7 @@ const handleEdit =()=>{
 
                    <td>
                    <a href="#" class="delete"onClick={()=>handleDelete(users.id)} title="Delete" data-toggle="tooltip" style={{color:"red"}}><i class="material-icons">&#xE872;</i></a>
-    
+                  
                 </td>
                 </tr>
                 
