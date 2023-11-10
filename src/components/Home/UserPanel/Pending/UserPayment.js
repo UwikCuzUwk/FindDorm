@@ -298,7 +298,7 @@ const handleMyaddson = ()=>{
   dialogClassName="modal-lg"
 >
   <Modal.Header closeButton>
-    <Modal.Title>My addsOn</Modal.Title>
+    <Modal.Title>My addOns</Modal.Title>
   </Modal.Header>
   <Modal.Body>
   <div class="col-lg-7">
