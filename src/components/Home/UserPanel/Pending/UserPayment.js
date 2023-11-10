@@ -203,6 +203,9 @@ const handleMyaddson = ()=>{
     <Modal.Title>Additional Gadgets/Appliances</Modal.Title>
   </Modal.Header>
   <Modal.Body>
+    <div>
+      
+    </div>
   <div className="form-check">
         <input
           className="form-check-input"
@@ -248,12 +251,12 @@ const handleMyaddson = ()=>{
         <input
           className="form-check-input"
           type="radio"
-          value="Electric Kettle"
-          id="checkboxElectricKettle"
+          value="Clip Fan"
+          id="checkboxClipFan"
           checked={selectedItems.includes('Clip Fan')}
           onChange={handleCheckboxChange}
         />
-        <label className="form-check-label" htmlFor="checkboxElectricKettle">
+        <label className="form-check-label" htmlFor="checkboxClipFan">
          Clip Fan
         </label>
       </div>
@@ -261,12 +264,12 @@ const handleMyaddson = ()=>{
         <input
           className="form-check-input"
           type="radio"
-          value="Electric Kettle"
-          id="checkboxElectricKettle"
+          value="Flat Iron"
+          id="checkboxFlatIron"
           checked={selectedItems.includes('Flat Iron')}
           onChange={handleCheckboxChange}
         />
-        <label className="form-check-label" htmlFor="checkboxElectricKettle">
+        <label className="form-check-label" htmlFor="checkboxflatIron">
      Flat Iron
         </label>
       </div>
@@ -274,12 +277,12 @@ const handleMyaddson = ()=>{
         <input
           className="form-check-input"
           type="radio"
-          value="Electric Kettle"
-          id="checkboxElectricKettle"
+          value="Hair Blower"
+          id="checkboxHairBlower"
           checked={selectedItems.includes('Hair Blower')}
           onChange={handleCheckboxChange}
         />
-        <label className="form-check-label" htmlFor="checkboxElectricKettle">
+        <label className="form-check-label" htmlFor="checkboxHairBlower">
          Hair Blower
         </label>
       </div>
