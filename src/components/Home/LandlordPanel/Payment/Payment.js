@@ -469,7 +469,7 @@ const handleBalance = async(e)=>{
         )
       })}
       <div class="form-group mt-3">
-                    <input type="text" class="form-control" id="month" aria-describedby="emailHelp" placeholder="Month" value = {addPrice} onChange={(e)=>setAddPrice(e.target.value)}/>
+                    <input type="text" class="form-control" id="month" aria-describedby="emailHelp" placeholder="Additional Price" value = {addPrice} onChange={(e)=>setAddPrice(e.target.value)}/>
                 </div>
                 
                   <button type="submit" class="btn btn-success mt-4" onClick={handleAdd}>Add Billing</button>
