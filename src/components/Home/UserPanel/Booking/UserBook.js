@@ -158,8 +158,6 @@ const handleSubmit = async (e) => {
             Gender:userGender,
             Contact:userContact,
             OwnerEmail:userss.Email,  
-            Street:street,
-            Barangay:barangay,
             Town:town,
             City:city,
             Price:userss.Price,
@@ -247,14 +245,6 @@ const handleSubmit = async (e) => {
               <label for="inputCity" class="form-label">Contact</label>
               <input type="text" class="form-control" id="inputCity"style = {{color:"blue"}} value={userContact} />
             </div>   
-            <div class="col-md-6">
-              <label for="inputCity" class="form-label">Street</label>
-              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {street} />
-            </div>
-            <div class="col-md-6">
-              <label for="inputCity" class="form-label">Barangay</label>
-              <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {barangay} />
-            </div>
             <div class="col-md-6">
               <label for="inputCity" class="form-label">Town</label>
               <input type="text" class="form-control" id="inputCity" style ={{color:"blue"}} value = {town} />
