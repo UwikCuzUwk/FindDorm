@@ -131,7 +131,8 @@ function UserPayment() {
               DormName: data.DormName,
               PreviousBill: data.PreviousBill,
               Price:data.Price,
-              Balance:data.Balance,
+              totalPrice:data.totalPrice,
+              Additional:data.Additional,
             };
           });
   
@@ -317,7 +318,8 @@ const handleMyaddson = ()=>{
                 <th>Next Billing </th>
                 <th>Room Name </th>
                 <th>Price </th>
-                <th>Balance </th>
+                <th>AddsOn </th>
+                <th>Total </th>
                 <th>Status </th>
            
             </tr>
@@ -331,7 +333,8 @@ const handleMyaddson = ()=>{
                  <td>{users.nextBillingDate}</td>
                  <td>{users.DormName}</td>
                  <td>{users.Price}</td>
-                 <td>{users.Balance}</td>
+                 <td>{users.Additional}</td>
+                 <td>{users.totalPrice}</td>
 
                     <td>{users.Status}</td>
 
